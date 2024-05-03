@@ -6,7 +6,7 @@ import cors from 'cors';
 const app = express();
 const PORT = process.env.PORT || 3000;
 const allowedOrigins = ["http://localhost:5173", "https://dashboardgraduation.onrender.com"];
-
+ 
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
