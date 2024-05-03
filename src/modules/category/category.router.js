@@ -8,4 +8,5 @@ router.post('/',fileUpload(fileType.image).single('image'), categoryController.C
 router.get('/',categoryController.getAll);
 router.get('/active', categoryController.getActive);
 router.get('/:id', categoryController.getDetails);
+router.patch('/:id', fileUpload(fileType.image).single('image'), categoryController.update);
 export default router;
