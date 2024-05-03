@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
     console.log(`server running on port ${PORT}`);
 })
  }).catch(err =>{
-    console.log("fail while connecting to server"+ err)
+   console.log("fail while connecting to server"+ err);
  })
 
 
