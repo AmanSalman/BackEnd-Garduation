@@ -16,8 +16,8 @@ const CategorySchema = new Schema ({
     },
     status: {
 		type: String,
-		default: 'Activated',
-		enum: ['Activated', 'Disabled']
+		default: 'active',
+		enum: ['active', 'inactive']
 	},
     createdBY:{
         type:Types.ObjectId,

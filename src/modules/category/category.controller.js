@@ -2,13 +2,50 @@ import slugify from "slugify";
 import { CategoryModel } from "../../../DB/models/category.model.js";
 import cloudinary from './../../utls/cloudinary.js';
 
-export const Create = async(req,res)=>{
-    const name = req.body.name.toLowerCase();
-    if(await CategoryModel.findOne({name})){
-        return res.staus(409).json({message:"category already exists"})
-    } 
-    req.body.slug = slugify(req.body.name);
-    const {secure_url,public_id} = cloudinary.uploader.upload(req.file.path,{folder:'ecommerce/categories'});
+// export const Create = async(req,res)=>{
+//     req.body.name = req.body.name.toLowerCase();
+//     if(await CategoryModel.findOne({name:req.body.name})){
+//         return res.staus(409).json({message:"category already exists"})
+//     } 
+//     req.body.slug = slugify(req.body.name);
+//     const {secure_url,public_id} = await cloudinary.uploader.upload(req.file.path,{folder:'ecommerce/categories'});
+//     req.body.image = {secure_url, public_id}; 
+//     const category = await CategoryModel.create(req.body);
+//     return res.json({message:"success",category})
+// }
 
-    return res.json({message:"success"})
+export const Create = async (req, res) => {
+        if (!req.file) {
+            return res.status(400).json({ message: "No file attached" });
+        }
+
+        req.body.name = req.body.name.toLowerCase();
+        if (await CategoryModel.findOne({ name: req.body.name })) {
+            return res.status(409).json({ message: "Category already exists" });
+        }
+
+        req.body.slug = slugify(req.body.name);
+
+        const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, { folder: 'ecommerce/categories' });
+        req.body.image = { secure_url, public_id };
+
+        const category = await CategoryModel.create(req.body);
+
+        return res.json({ message: "Success", category });
+}
+  
+export const getAll = async (req,res)=>{
+    const Categories = await CategoryModel.find().select('name image slug');
+     
+    return res.status(200).json({message:'success', Categories});
+}
+
+export const getActive = async (req,res)=>{
+    const categories = await CategoryModel.find({status:'active'});
+    return res.status(200).json({message:'success', categories});
+}  
+
+export const getDetails = async (req,res)=>{
+    const category = await CategoryModel.findById(req.params.id);
+    return res.status(200).json({message:'success', category})
 }
