@@ -5,7 +5,8 @@ import { Appinit } from './src/Appinit.js';
 import cors from 'cors'
 const app = express();
 const PORT = process.env.PORT || 3000; 
-const allowedOrigins = ["http://localhost:5173", "https://dashboardgraduation.onrender.com"];
+const allowedOrigins = ["http://localhost".PORT , "https://dashboardgraduation.onrender.com"];
+
 
 app.use(cors({
   origin: (origin, callback) => {
