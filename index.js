@@ -4,7 +4,7 @@ import { connectDB } from './DB/connection.js';
 import { Appinit } from './src/Appinit.js';
 import cors from 'cors'
 const app = express();
-const PORT =   9000 || process.env.PORT; 
+const PORT =   9001 || process.env.PORT; 
 const allowedOrigins = ["http://localhost:5173", "https://dashboardgraduation.onrender.com"];
 
 app.use(cors({
@@ -24,7 +24,7 @@ app.use(cors({
  Appinit(app,express);
 
  connectDB().then(()=>{
-    app.listen(PORT, ()=>{
+    app.listen(PORT, '0.0.0.0',  ()=>{
     console.log(`server running on port ${PORT}`);
 })
  }).catch(err =>{
