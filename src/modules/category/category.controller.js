@@ -35,7 +35,7 @@ export const Create = async (req, res) => {
 }
   
 export const getAll = async (req,res)=>{
-    const Categories = await CategoryModel.find().select('name image');
+    const Categories = await CategoryModel.find().select('name image status');
      
     return res.status(200).json({message:'success', Categories});
 }
