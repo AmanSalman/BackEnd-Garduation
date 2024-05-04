@@ -31,7 +31,7 @@ export const Create = async (req, res) => {
 
         const category = await CategoryModel.create(req.body);
 
-        return res.json({ message: "Success", category });
+        return res.json({ message: "success", category });
 }
   
 export const getAll = async (req,res)=>{
