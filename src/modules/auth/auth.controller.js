@@ -24,7 +24,7 @@ export const login = async (req, res) => {
 };
 
 export const register = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, password,phone } = req.body;
     try {
         const user = await UserModel.findOne({ email });
         if (user) {
@@ -32,7 +32,7 @@ export const register = async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALT));
-        const newUser = await UserModel.create({ username, email, password: hashedPassword });
+        const newUser = await UserModel.create({ username, email, password: hashedPassword,phone });
         if (!newUser) {
             return res.status(500).json({ message: 'Error while creating user' });
         }
