@@ -24,7 +24,7 @@ const CategorySchema = new Schema ({
         ref:'User',
         // required:true
     },
-    updatedBy:{
+    updatedBY:{
         type:Types.ObjectId,
         ref:'User',
         // required:true

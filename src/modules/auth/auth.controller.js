@@ -7,16 +7,16 @@ export const login = async (req, res) => {
     try {
         const user = await UserModel.findOne({ email });
         if (!user) {
-            return res.status(400).json({ message: 'User not found' });
+            return res.status(400).json({ message: 'Invaild email' });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid password' });
+            return res.status(400).json({ message: 'Invaild password' });
         }
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET); 
-        return res.status(200).json({ message: 'Success', token, user });
+        const token = jwt.sign({ id: user._id, role:user.role,status:user.status }, process.env.JWT_SECRET); 
+        return res.status(200).json({ message: 'Success', token });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal server error' });
