@@ -6,7 +6,7 @@ const router = Router()
 
 
 router.post('/',auth(),fileUpload(fileType.image).single('image'), categoryController.Create);
-router.get('/',categoryController.getAll);
+router.get('/',auth(),categoryController.getAll);
 router.get('/active', categoryController.getActive);
 router.get('/:id', categoryController.getDetails);
 router.patch('/:id', fileUpload(fileType.image).single('image'), categoryController.update);

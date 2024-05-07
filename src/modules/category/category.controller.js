@@ -28,7 +28,7 @@ export const Create = async (req, res) => {
 
         const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, { folder: 'ecommerce/categories' });
         req.body.image = { secure_url, public_id };
-        req,body.createdBY = req.user._id;
+        req.body.createdBY = req.user._id;
         req.body.updatedBY = req.user._id;
         const category = await CategoryModel.create(req.body);
 
