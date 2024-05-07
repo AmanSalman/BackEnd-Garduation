@@ -1,4 +1,4 @@
-import { UserModel } from "../../DB/models/user.model";
+import { UserModel } from "../../DB/models/user.model.js";
 import { jwt } from 'jsonwebtoken';
 
 export const auth = ()=>{
