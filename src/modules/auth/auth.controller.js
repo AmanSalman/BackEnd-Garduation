@@ -16,7 +16,7 @@ export const login = async (req, res) => {
         }
 
         const token = jwt.sign({ id: user._id, role:user.role,status:user.status }, process.env.JWT_SECRET); 
-        return res.status(200).json({ message: 'Success', token });
+        return res.status(200).json({ message: 'success', token });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal server error' });
@@ -36,7 +36,7 @@ export const register = async (req, res) => {
         if (!newUser) {
             return res.status(500).json({ message: 'Error while creating user' });
         }
-        return res.status(201).json( { message: 'Success', newUser });
+        return res.status(201).json( { message: 'success', newUser });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Internal server error' });
