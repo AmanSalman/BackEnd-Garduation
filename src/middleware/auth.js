@@ -10,7 +10,6 @@ export const auth = ()=>{
         const token = authorization.split(process.env.BEARERTOKEN)[1];
 
         const decoded = jwt.verify(token,process.env.JWT_SECRET);
-        console.log(decoded)
         if(!decoded) {
             return res.status(401).json({message:"unauthorized"});
         }
