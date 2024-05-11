@@ -26,7 +26,7 @@ export const Create = async (req, res) => {
 
         req.body.slug = slugify(req.body.name);
 
-        const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, { folder: 'ecommerce/categories' });
+        const { secure_url, public_id } = await cloudinary.uploader.upload(req.file.path, { folder: `${process.env.AppName}/categories` });
         req.body.image = { secure_url, public_id };
         req.body.createdBY = req.user._id;
         req.body.updatedBY = req.user._id;

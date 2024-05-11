@@ -5,7 +5,7 @@ export const auth = ()=>{
     return async (req,res,next)=>{
         const {authorization} = req.headers;
         if(!authorization || !authorization.startsWith(process.env.BEARERTOKEN)){
-            return res.status(400).json({message:"invalid authorization"});
+            return res.status(401).json({message:"invalid authorization"});
           } 
 
         const token = authorization.split(process.env.BEARERTOKEN)[1];
