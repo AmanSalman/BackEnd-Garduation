@@ -10,5 +10,5 @@ router.get('/', auth(),bookController.getAll);
 router.get('/:id', bookController.getDetails);
 // router.patch('/:id', auth(),fileUpload(fileType.image).single('image'), bookController.update);
 router.delete('/:id', bookController.Delete);
-
+router.patch('/:id', auth(), fileUpload(fileType.image).single('image'), bookController.Update )
 export default router;
