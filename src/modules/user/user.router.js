@@ -7,5 +7,7 @@ const router = Router()
 router.get('/',auth(), userController.getAll);
 router.patch('/:id',auth(), userController.Disable);
 router.patch('/Activate/:id', userController.Activate);
+router.get('/profile',auth(), userController.Profile)
 export default router; 
 
+ 

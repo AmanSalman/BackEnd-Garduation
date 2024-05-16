@@ -15,6 +15,10 @@ const BookSChema = new Schema({
         type:Number,
         required:true,
     },
+    finalPrice:{
+        type:Number,
+        required:true,
+    },
     description:{
         type:String,
         required:true,
@@ -23,15 +27,19 @@ const BookSChema = new Schema({
         type:String,
         required:false,
     },
-    categoryName:{
+    categoryId:{
         type:String,
         required:true,
         ref:'Category'
     },
-    image:{
+    mainImage:{
         type:Object,
         required:true,
     },
+    subImages:[{
+        type:Object,
+        required:false
+    }],
     createdBY:{ 
         type:Types.ObjectId,
         ref:'User',
@@ -42,10 +50,19 @@ const BookSChema = new Schema({
         ref:'User',
         // required:true
     },
-    slug:{
-        type:String,
-        required:true
+    Discount:{
+        type:Number,
+        default:0
     },
+    stock:{
+        type:Number,
+        default:1
+    },
+    status:{
+        type: String,
+        default: 'Active',
+        enum: ['Active', 'Disabled']
+    }
     
 },{
     timestamps: true,

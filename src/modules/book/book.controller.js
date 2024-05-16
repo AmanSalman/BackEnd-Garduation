@@ -3,31 +3,38 @@ import { BookModel } from "../../../DB/models/book.model.js";
 import { CategoryModel } from "../../../DB/models/category.model.js";
 import cloudinary from "../../utls/cloudinary.js";
 
-export const Create  = async (req,res)=>{
-    const {isbn, title, price, description, publishingHouse, categoryName} = req.body;
-    if (!req.file) {
-        return res.status(400).json({ message: "No file attached" });
-    }
-    if(!await CategoryModel.findOne({name:categoryName})){
-        return res.status(404).json({message:"category not found"});
-    }
 
-    if(await BookModel.findOne({isbn: isbn})){
-        return res.status(409).json({message:"book already exists"});
-    }
-  
-    if( price <=0 ){
-        return res.status(400).json({message:"price should be greater than 0"});
-    }
+export const Create = async (req, res) => {
+    try {
+        const { title, price, discount, categoryId } = req.body;
+        
+        const checkCategory = await CategoryModel.findById(categoryId);
+        if (!checkCategory) {
+            return res.status(404).json({ message: "category not found" });
+        }
 
-    const {secure_url, public_id} = await cloudinary.uploader.upload(req.file.path, { folder: `${process.env.AppName}/books` })
-    req.body.image = {secure_url, public_id}
-    req.body.createdBY = req.user._id;
-    req.body.updatedBY = req.user._id;
-    req.body.slug = slugify(req.body.title);
-    const book = await BookModel.create(req.body);
-    return res.json({ message: "success", book });
+        req.body.finalPrice = price - ((price * (discount || 0)) / 100);
+ 
+        const mainImageUpload = await cloudinary.uploader.upload(req.files.mainImage[0].path, {folder: `${process.env.AppName}/books/${title}/Main`});
+        const mainImage = { secure_url: mainImageUpload.secure_url, public_id: mainImageUpload.public_id };
+        req.body.mainImage = mainImage;
+
+        const subImages = [];
+        for (const file of req.files.subImages) {
+            const subImageUpload = await cloudinary.uploader.upload(file.path, {folder: `${process.env.AppName}/books/${title}/Sub`});
+            const subImage = { secure_url: subImageUpload.secure_url, public_id: subImageUpload.public_id };
+            subImages.push(subImage);
+        }
+        req.body.subImages = subImages;
+
+        const book = await BookModel.create(req.body);
+        return res.status(201).json({ message: "success", book });
+    } catch (error) {
+        console.error("Error:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
 }
+
 
 export const getDetails = async (req,res)=>{
     const book = await BookModel.findById(req.params.id);
