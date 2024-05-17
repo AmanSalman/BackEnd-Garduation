@@ -13,7 +13,7 @@ export const auth = (roleAccess=[])=>{
         if(!authorization || !authorization.startsWith(process.env.BEARERTOKEN)){
             return res.status(401).json({message:"invalid authorization"});
           } 
-
+          
         const token = authorization.split(process.env.BEARERTOKEN)[1];
         const decoded = jwt.verify(token,process.env.JWT_SECRET); 
         if(!decoded) {
