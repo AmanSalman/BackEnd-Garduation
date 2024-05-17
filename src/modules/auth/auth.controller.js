@@ -26,25 +26,6 @@ export const login = async (req, res) => {
 
 export const register = async (req, res) => {
     const { username, email, password,phone } = req.body;
-
-    await sendEmail({to:email,subject:'Kids Skills Store', html :`
-
-        <div style="max-width: 600px; margin: 50px auto; background-color: #f9f9f9; padding: 30px; border-radius: 15px; box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); text-align: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333;">
-
-    <h1 style="color: #0066cc; font-size: 32px; margin-bottom: 20px; font-weight: bold; text-transform: uppercase;">Welcome to Our Children's Book Store!</h1>
-
-    <p style="font-size: 18px; line-height: 1.6; margin-bottom: 30px; font-weight:700; text-transform:capitalize">Dear <span style='color:red'>${username}</span>,</p>
-
-    <p style="font-size: 20px; line-height: 1.6; margin-bottom: 30px;">Welcome to our Children's Book Store! We're thrilled to have you with us.</p>
-
-    <p style="font-size: 20px; line-height: 1.6; margin-bottom: 30px;">Explore our diverse collection of children's books and unlock the world of imagination.</p>
-
-    <p style="color: #0066cc; font-size: 22px; font-weight: bold; margin-top: 40px;">Best regards,<br>Kids Skills Team</p>
-
-</div>
-
-    
-    </div>`})
         const user = await UserModel.findOne({ email });
         if (user) {
             return res.status(409).json({ message: 'Email already exists' });
@@ -56,24 +37,24 @@ export const register = async (req, res) => {
             return res.status(500).json({ message: 'Error while creating user' });
         }
         
-        await sendEmail({subject:'Kids Skills Store', html :`
+//         await sendEmail({subject:'Kids Skills Store', html :`
 
-        <div style="max-width: 600px; margin: 50px auto; background-color: #f9f9f9; padding: 30px; border-radius: 15px; box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); text-align: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333;">
+//         <div style="max-width: 600px; margin: 50px auto; background-color: #f9f9f9; padding: 30px; border-radius: 15px; box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); text-align: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333;">
 
-    <h1 style="color: #0066cc; font-size: 32px; margin-bottom: 20px; font-weight: bold; text-transform: uppercase;">Welcome to Our Children's Book Store!</h1>
+//     <h1 style="color: #0066cc; font-size: 32px; margin-bottom: 20px; font-weight: bold; text-transform: uppercase;">Welcome to Our Children's Book Store!</h1>
 
-    <p style="font-size: 18px; line-height: 1.6; margin-bottom: 30px;">Dear ${username},</p>
+//     <p style="font-size: 18px; line-height: 1.6; margin-bottom: 30px;">Dear ${username},</p>
 
-    <p style="font-size: 20px; line-height: 1.6; margin-bottom: 30px;">Welcome to our Children's Book Store! We're thrilled to have you with us.</p>
+//     <p style="font-size: 20px; line-height: 1.6; margin-bottom: 30px;">Welcome to our Children's Book Store! We're thrilled to have you with us.</p>
 
-    <p style="font-size: 20px; line-height: 1.6; margin-bottom: 30px;">Explore our diverse collection of children's books and unlock the world of imagination.</p>
+//     <p style="font-size: 20px; line-height: 1.6; margin-bottom: 30px;">Explore our diverse collection of children's books and unlock the world of imagination.</p>
 
-    <p style="color: #0066cc; font-size: 22px; font-weight: bold; margin-top: 40px;">Best regards,<br>Kids Skills Team</p>
+//     <p style="color: #0066cc; font-size: 22px; font-weight: bold; margin-top: 40px;">Best regards,<br>Kids Skills Team</p>
 
-</div>
+// </div>
 
     
-    </div>`})
+//     </div>`})
             return res.status(201).json( { message: 'success', newUser });
 
 };
