@@ -25,15 +25,16 @@ export const auth = (roleAccess=[])=>{
             return res.status(401).json({message:"user not found"});
         } 
 
-        // if(roleAccess.includes(user.role)){
-        //     req.user = user;
-        //     return next();
-        // }
+        console.log(roleAccess.includes(user.role))
+        if(roleAccess.includes(user.role)){
+            req.user = user;
+            return next();
+        }
 
-        req.user = user;
-        next();
+        // req.user = user;
+        // next();
 
-       // return res.status(403).json({message:"access denied"});
+       return res.status(403).json({message:"access denied"});
         
 
     }
