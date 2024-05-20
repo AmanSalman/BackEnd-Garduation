@@ -8,4 +8,5 @@ export const permissions = {
     update:[roles.Admin, roles.User],
     delete:[roles.Admin],
     getDetails:[roles.Admin],
+    changePassword:[roles.Admin, roles.User]
 }

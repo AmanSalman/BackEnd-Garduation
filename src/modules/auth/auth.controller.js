@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import {UserModel} from './../../../DB/models/user.model.js';
-import bcrypt from 'bcrypt';
+import bcrypt, { compare } from 'bcrypt';
 import {sendEmail} from '../../utls/sendEmail.js';
 import {customAlphabet, nanoid} from 'nanoid';
 
@@ -116,3 +116,19 @@ export const UpdateProfile = async (req, res) => {
 
 	return res.status(200).json({message: "success", updated})
 }
+
+
+export const updatePassword=async  (req,res)=>{
+
+    const {oldPassword,newPassword} = req.body;
+
+    const user = await UserModel.findById(req.user._id);
+    const match = compare(oldPassword,user.password)
+    if(!match){
+        return res.status(400).json({message:"invalid password"})
+    }
+    const hashPassword = await bcrypt.hash(newPassword, parseInt(process.env.SALT));
+    await UserModel.findByIdAndUpdate(req.user._id,{password:hashPassword});
+    return res.json({message:"success"})
+
+} 
