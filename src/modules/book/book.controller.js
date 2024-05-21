@@ -6,17 +6,22 @@ import cloudinary from "../../utls/cloudinary.js";
 
 export const Create = async (req, res) => {
     try {
-        const { title, price, discount, categoryId } = req.body;
+        const { title, price, Discount, categoryName,isbn } = req.body;
         
-        const checkCategory = await CategoryModel.findById(categoryId);
+        const checkCategory = await CategoryModel.findOne({name:categoryName});
         if (!checkCategory) {
             return res.status(404).json({ message: "category not found" });
         }
 
-        req.body.finalPrice = price - ((price * (discount || 0)) / 100);
+        const checkBook = await BookModel.findOne({isbn:isbn});
+        if (checkBook) {
+            return res.status(409).json({ message: "book already exists" });
+        }
+
+        req.body.finalPrice = price - ((price * (Discount || 0)) / 100);
  
         const mainImageUpload = await cloudinary.uploader.upload(req.files.mainImage[0].path, {folder: `${process.env.AppName}/books/${title}/Main`});
-        const mainImage = { secure_url: mainImageUpload.secure_url, public_id: mainImageUpload.public_id };
+        const mainImage = { secure_url: mainImageUpload.secure_url, public_id: mainImageUpload.public_id,Discount, stock:req.body.stock, status:req.body.status };
         req.body.mainImage = mainImage;
 
         const subImages = [];
@@ -27,7 +32,9 @@ export const Create = async (req, res) => {
         }
         req.body.subImages = subImages;
 
-        const book = await BookModel.create(req.body);
+        const book = await BookModel.create({title ,subImages: req.body.subImages, mainImage:req.body.mainImage,description:req.body.description,
+            isbn, price, finalPrice:req.body.finalPrice, publishingHouse:req.body.publishingHouse, categoryId:checkCategory._id}
+        );
         return res.status(201).json({ message: "success", book });
     } catch (error) {
         console.error("Error:", error);
