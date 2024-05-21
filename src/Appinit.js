@@ -9,7 +9,11 @@ import userRouter from './modules/user/user.router.js';
 import cors from 'cors'
 export const Appinit = ( app,express )=>{
     app.use(express.json());
-    app.use(cors()); 
+    app.use(cors({
+        origin: 'http://localhost:5173', // Or '*' to allow any origin
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization']
+      }));
     app.get('/', (req,res)=>{
         return res.status(200).json({message:"Welcome"})
      }) 

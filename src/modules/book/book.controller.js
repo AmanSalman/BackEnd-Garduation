@@ -61,7 +61,9 @@ export const Delete = async (req,res)=>{
     if(!book){
         return res.status(404).json({message:"book not found"});
     }
-    await cloudinary.uploader.destroy(book.image.public_id);
+    if(book.mainImage){
+        await cloudinary.uploader.destroy(book.mainImage.public_id);
+    }
     await BookModel.findByIdAndDelete(id);
     return res.status(200).json({message:'success'});
 }
