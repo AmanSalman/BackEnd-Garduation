@@ -9,6 +9,7 @@ import userRouter from './modules/user/user.router.js';
 import cors from 'cors'
 export const Appinit = ( app,express )=>{
     app.use(express.json());
+    const allowedOrigins = ["http://localhost:5173","http://localhost:5174", "https://admindashboard-8bwy.onrender.com"];
     app.use(cors({
       origin: (origin, callback) => {
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {
