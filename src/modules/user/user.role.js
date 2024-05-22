@@ -4,5 +4,5 @@ export const permissions = {
     get:[roles.Admin],
     Disable:[roles.Admin],
     Activate:[roles.Admin],
-    Profile:[roles.User],
+    Profile:[roles.User,roles.Admin],
 }
