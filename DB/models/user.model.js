@@ -22,7 +22,9 @@ const UserSchema = new Schema({
 		type: Object
 	},
 	phone: {
-		type: String
+		type: String,
+		required:true,
+		unique: true,
 	},
 	address: {
 		type: String
