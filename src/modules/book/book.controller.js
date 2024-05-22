@@ -54,6 +54,11 @@ export const getAll = async (req,res)=>{
     return res.status(200).json({message:'success', Books});
 }
 
+export const getActive = async (req,res) =>{
+    const books = await BookModel.find({status:'Active'});
+    return res.status(200).json({message:'success', books});
+}
+
 
 export const Delete = async (req,res)=>{
     const {id} = req.params;

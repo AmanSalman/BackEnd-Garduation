@@ -1,6 +1,7 @@
 import slugify from "slugify";
 import { CategoryModel } from "../../../DB/models/category.model.js";
 import cloudinary from './../../utls/cloudinary.js';
+import { BookModel } from "../../../DB/models/book.model.js";
 
 // export const Create = async(req,res)=>{
 //     req.body.name = req.body.name.toLowerCase();
@@ -48,6 +49,13 @@ export const getActive = async (req,res)=>{
 export const getDetails = async (req,res)=>{
     const category = await CategoryModel.findById(req.params.id);
     return res.status(200).json({message:'success', category})
+}
+
+export const getbooks = async (req,res)=>{
+    const {id} = req.params;
+    const books = await BookModel.find({categoryId:id})
+    return res.status(200).json({message:'success', books});
+
 }
 
 export const update = async (req,res)=>{

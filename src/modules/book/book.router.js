@@ -10,8 +10,12 @@ router.post('/',auth(permissions.create),fileUpload(fileType.image).fields([
     { name: 'mainImage', maxCount: 1 },
     { name: 'subImages', maxCount: 10 }
 ]), bookController.Create);
+
+
 router.get('/', auth(permissions.getAll),bookController.getAll);
+router.get('/Active', bookController.getActive)
 router.get('/:id',auth(permissions.getDetails), bookController.getDetails);
+
 // router.patch('/:id', auth(),fileUpload(fileType.image).single('image'), bookController.update);
 router.delete('/:id', auth(permissions.delete) , bookController.Delete);
 router.delete('/deleteSubimage/:id', auth(permissions.delete), bookController.deleteSubImage);
