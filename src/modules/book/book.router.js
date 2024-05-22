@@ -8,11 +8,11 @@ const router = Router()
 
 router.post('/',auth(permissions.create),fileUpload(fileType.image).fields([
     { name: 'mainImage', maxCount: 1 },
-    { name: 'subImages', maxCount: 7 }
+    { name: 'subImages', maxCount: 10 }
 ]), bookController.Create);
 router.get('/', auth(permissions.getAll),bookController.getAll);
 router.get('/:id',auth(permissions.getDetails), bookController.getDetails);
 // router.patch('/:id', auth(),fileUpload(fileType.image).single('image'), bookController.update);
 router.delete('/:id', auth(permissions.delete) , bookController.Delete);
-router.patch('/:id', auth(permissions.update), fileUpload(fileType.image).single('image'), bookController.Update )
+router.patch('/:id', auth(permissions.update), fileUpload(fileType.image).single('mainImage'), bookController.Update )
 export default router; 

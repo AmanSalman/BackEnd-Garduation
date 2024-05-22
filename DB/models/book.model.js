@@ -25,7 +25,7 @@ const BookSChema = new Schema({
     },
     publishingHouse:{
         type:String,
-        required:false,
+        required:true,
     },
     categoryId:{
         type:String,

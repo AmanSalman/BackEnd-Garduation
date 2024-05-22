@@ -75,17 +75,30 @@ export const Update = async (req,res)=>{
         return res.status(404).json({message:"Book not found"})
     }
 
-    book.title = req.body.title.toLowerCase();
-
-    if(await BookModel.findOne({title:req.body.title, categoryName:req.body.categoryName, _id:{$ne:req.params.id}})){
-        return res.status(409).json({message:"book already exists"});
+    if(req.body.categoryId){
+        const category = await CategoryModel.findById(req.body.categoryId);
+        if(!category){
+            return res.status(404).json({message:"category not found"});
+        }
+        book.categoryId = req.body.categoryId;
     }
-
-    book.slug = slugify(req.body.title);
 
     if(req.body.isbn) {
-    book.isbn = req.body.isbn;
+        const {isbn} = req.body
+        const checkBook = await BookModel.findOne({isbn:isbn});
+        if (checkBook) {
+            return res.status(409).json({ message: "book already exists" });
+        }
+        book.isbn = req.body.isbn;
     }
+
+    if(req.body.title){
+        if(await BookModel.findOne({title:req.body.title})){
+            return res.status(409).json({message:"book already exists"});
+        }
+        book.title = req.body.title
+    }
+
 
     if(req.body.price && req.body.price>0){
         book.price = req.body.price;
@@ -98,23 +111,27 @@ export const Update = async (req,res)=>{
     if(req.body.publishingHouse){
         book.publishingHouse = req.body.publishingHouse;
     }
-
-    const category = await CategoryModel.findOne({name:req.body.categoryName});
-    if(!category) {
-    return res.status(404).json({message:"category not found"});
+    if(req.body.status){
+        book.status = req.body.status;
     }
 
-    book.categoryName = req.body.categoryName;
+    if(req.body.stock && req.body.stock>0){
+        book.stock = req.body.stock;
+    }
+     if(req.body.Discount && req.body.Discount){
+        book.Discount = req.body.Discount;
+        book.finalPrice = book.price - ((book.price * (book.Discount || 0)) / 100);
+     }
     
     if(req.file){
-        cloudinary.uploader.destroy(book.image.public_id);
+        cloudinary.uploader.destroy(book.mainImage.public_id);
         const {secure_url,public_id} = await cloudinary.uploader.upload(req.file.path, {
             folder: `${process.env.AppName}/books`
         });
-        book.image = {secure_url,public_id};
+        book.mainImage = {secure_url,public_id};
     }
 
-    // book.status = req.body.status;
+    
     await book.save();
     return res.status(200).json({message:'success',book});
 }
