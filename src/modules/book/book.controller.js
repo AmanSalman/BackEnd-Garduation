@@ -159,7 +159,7 @@ export const addsubimage = async (req,res)=>{
         // Save the updated book with new subimages
         await book.save();
 
-        res.json({ message: 'success', book });
+        res.json({ message: 'success', updatedSubImages });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Failed to update subimages' });
@@ -168,7 +168,7 @@ export const addsubimage = async (req,res)=>{
 
 export const deleteSubImage = async (req, res) => {
     const { id } = req.params;
-    const {public_id} =req.body
+    const { public_id } = req.query;
     try {
         const book = await BookModel.findById(id); 
         if(!book){

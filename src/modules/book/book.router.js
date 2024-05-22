@@ -19,4 +19,4 @@ router.patch('/:id', auth(permissions.update), fileUpload(fileType.image).single
 router.patch ('/:id/subimage',fileUpload(fileType.image).fields([
     { name: 'subImages', maxCount: 10 }
 ]), auth(permissions.update), bookController.addsubimage)
-export default router; 
+export default router;
