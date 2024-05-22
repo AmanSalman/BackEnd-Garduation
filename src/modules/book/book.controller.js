@@ -120,7 +120,8 @@ export const Update = async (req,res)=>{
     }
      if(req.body.Discount && req.body.Discount){
         book.Discount = req.body.Discount;
-        book.finalPrice = book.price - ((book.price * (book.Discount || 0)) / 100);
+        let finalprice = book.price - ((book.price * (book.Discount || 0)) / 100)
+        book.finalPrice = finalprice;
      }
     
     if(req.file){
@@ -134,4 +135,63 @@ export const Update = async (req,res)=>{
     
     await book.save();
     return res.status(200).json({message:'success',book});
+}
+
+
+// update sub image
+
+export const addsubimage = async (req,res)=>{
+    const { id } = req.params;
+    const { subImages } = req.files;
+
+    try {
+        const book = await BookModel.findById(id); 
+        const updatedSubImages = [];
+
+        for (const file of subImages) {
+            const subImageUpload = await cloudinary.uploader.upload(file.path, { folder: `${process.env.AppName}/books/${book.title}/Sub` });
+            const subImage = { secure_url: subImageUpload.secure_url, public_id: subImageUpload.public_id };
+            updatedSubImages.push(subImage);
+        }
+
+        book.subImages = [...book.subImages, ...updatedSubImages];
+
+        // Save the updated book with new subimages
+        await book.save();
+
+        res.json({ message: 'success', book });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Failed to update subimages' });
+    }
+}
+
+export const deleteSubImage = async (req, res) => {
+    const { id } = req.params;
+    const {public_id} =req.body
+    try {
+        const book = await BookModel.findById(id); 
+        if(!book){
+            return res.status(404).json({ message: 'Book not found' });
+        }
+        const subImageIndex = book.subImages.findIndex(image => image.public_id === public_id);
+
+        if (subImageIndex === -1) {
+            return res.status(404).json({ message: 'Subimage not found' });
+        }
+
+        // Delete the subimage from Cloudinary
+        await cloudinary.uploader.destroy(public_id);
+
+        // Remove the subimage from the book's subImages array
+        book.subImages.splice(subImageIndex, 1);
+
+        // Save the updated book without the deleted subimage
+        await book.save();
+
+        res.json({ message: 'success',book });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Failed to delete subimage' });
+    }
 }

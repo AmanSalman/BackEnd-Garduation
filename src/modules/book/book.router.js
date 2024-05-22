@@ -14,5 +14,9 @@ router.get('/', auth(permissions.getAll),bookController.getAll);
 router.get('/:id',auth(permissions.getDetails), bookController.getDetails);
 // router.patch('/:id', auth(),fileUpload(fileType.image).single('image'), bookController.update);
 router.delete('/:id', auth(permissions.delete) , bookController.Delete);
-router.patch('/:id', auth(permissions.update), fileUpload(fileType.image).single('mainImage'), bookController.Update )
+router.delete('/deleteSubimage/:id', auth(permissions.delete), bookController.deleteSubImage);
+router.patch('/:id', auth(permissions.update), fileUpload(fileType.image).single('mainImage'), bookController.Update)
+router.patch ('/:id/subimage',fileUpload(fileType.image).fields([
+    { name: 'subImages', maxCount: 10 }
+]), auth(permissions.update), bookController.addsubimage)
 export default router; 
