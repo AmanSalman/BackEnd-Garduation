@@ -10,10 +10,19 @@ import cors from 'cors'
 export const Appinit = ( app,express )=>{
     app.use(express.json());
     app.use(cors({
-        origin: 'http://localhost:5173', // Or '*' to allow any origin
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        allowedHeaders: ['Content-Type', 'Authorization']
-      }));
+      origin: (origin, callback) => {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+          } else {
+            callback(new Error('Not allowed by CORS'));
+          }
+      },
+      methods: 'GET,POST,PUT,DELETE,HEAD,PATCH',
+      allowedHeaders: 'Content-Type, Authorization',
+      credentials: true, // Set to true if you're passing cookies or authorization headers
+      preflightContinue: false
+      
+    }));
     app.get('/', (req,res)=>{
         return res.status(200).json({message:"Welcome"})
      }) 
