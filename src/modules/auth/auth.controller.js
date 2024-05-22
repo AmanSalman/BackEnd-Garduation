@@ -104,17 +104,27 @@ export const UpdateProfile = async (req, res) => {
 	if (!check) {
 		return res.status(404).json({message: 'User not found'});
 	}
-	const user = await UserModel.findOne({email: email})
-	if (user) {
-		return res.status(404).json({message: "email already in use"})
+	if(req.body.email){
+		const checkemail = await UserModel.findOne({email: email})
+        if(checkemail){
+            return res.status(404).json({message: "email already in use"})
+        }
+		check.email = req.body.email
+	} 
+	
+	if(req.body.username){
+        check.username = req.body.username
 	}
-	const updated = await UserModel.findByIdAndUpdate(req.user._id, {
-		username: username,
-		email: email,
-		phone: phone
-	}, {new: true});
+	if(req.body.phone){
+		const checkphone = await UserModel.findOne({phone: phone})
+		if(checkphone){
+			return res.status(404).json({message: "phone number already in use"})
+		}
+        check.phone = req.body.phone
+    }
+	await check.save()
 
-	return res.status(200).json({message: "success", updated})
+	return res.status(200).json({message: "success", user: check})
 }
 
 
