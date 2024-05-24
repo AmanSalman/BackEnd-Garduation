@@ -62,6 +62,11 @@ const BookSChema = new Schema({
         type: String,
         default: 'Active',
         enum: ['Active', 'Disabled']
+    },
+    categoryName:{
+        type:String,
+        required:true,
+        ref:'Category'
     }
     
 },{

@@ -56,7 +56,8 @@ export const Create = async (req, res) => {
             publishingHouse,
             categoryId: checkCategory._id,
             stock,
-            status
+            status,
+            categoryName:checkCategory.name
         });
 
         return res.status(201).json({ message: "success", book });
