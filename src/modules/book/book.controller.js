@@ -6,42 +6,66 @@ import cloudinary from "../../utls/cloudinary.js";
 
 export const Create = async (req, res) => {
     try {
-        const { title, price, Discount, categoryName,isbn } = req.body;
-        
-        const checkCategory = await CategoryModel.findOne({name:categoryName});
+        const { title, price, Discount, categoryName, isbn, description, publishingHouse, stock, status } = req.body;
+
+        // Validate and parse inputs
+        const parsedPrice = parseFloat(price);
+        const parsedDiscount = parseFloat(Discount) || 0;
+
+        if (isNaN(parsedPrice) || isNaN(parsedDiscount)) {
+            return res.status(400).json({ message: "Invalid price or discount value" });
+        }
+
+        const checkCategory = await CategoryModel.findOne({ name: categoryName });
         if (!checkCategory) {
-            return res.status(404).json({ message: "category not found" });
+            return res.status(404).json({ message: "Category not found" });
         }
 
-        const checkBook = await BookModel.findOne({isbn:isbn});
+        const checkBook = await BookModel.findOne({ isbn });
         if (checkBook) {
-            return res.status(409).json({ message: "book already exists" });
+            return res.status(409).json({ message: "Book already exists" });
         }
 
-        let finalprice = price - ((price * (Discount || 0)) / 100)
-        req.body.finalPrice = finalprice ;
- 
-        const mainImageUpload = await cloudinary.uploader.upload(req.files.mainImage[0].path, {folder: `${process.env.AppName}/books/${title}/Main`});
-        const mainImage = { secure_url: mainImageUpload.secure_url, public_id: mainImageUpload.public_id,Discount, stock:req.body.stock, status:req.body.status };
-        req.body.mainImage = mainImage;
+        const finalPrice = parsedPrice - (parsedPrice * parsedDiscount / 100);
+
+        const mainImageUpload = await cloudinary.uploader.upload(req.files.mainImage[0].path, { folder: `${process.env.AppName}/books/${title}/Main` });
+        const mainImage = {
+            secure_url: mainImageUpload.secure_url,
+            public_id: mainImageUpload.public_id
+        };
 
         const subImages = [];
         for (const file of req.files.subImages) {
-            const subImageUpload = await cloudinary.uploader.upload(file.path, {folder: `${process.env.AppName}/books/${title}/Sub`});
-            const subImage = { secure_url: subImageUpload.secure_url, public_id: subImageUpload.public_id };
+            const subImageUpload = await cloudinary.uploader.upload(file.path, { folder: `${process.env.AppName}/books/${title}/Sub` });
+            const subImage = {
+                secure_url: subImageUpload.secure_url,
+                public_id: subImageUpload.public_id
+            };
             subImages.push(subImage);
         }
-        req.body.subImages = subImages;
 
-        const book = await BookModel.create({title ,subImages: req.body.subImages, mainImage:req.body.mainImage,description:req.body.description,
-            isbn, price, finalPrice:req.body.finalPrice, publishingHouse:req.body.publishingHouse, categoryId:checkCategory._id}
-        );
+        const book = await BookModel.create({
+            title,
+            subImages,
+            mainImage,
+            description,
+            isbn,
+            price: parsedPrice,
+            finalPrice,
+            Discount: parsedDiscount,
+            publishingHouse,
+            categoryId: checkCategory._id,
+            stock,
+            status
+        });
+
         return res.status(201).json({ message: "success", book });
     } catch (error) {
         console.error("Error:", error);
         return res.status(500).json({ message: "Internal server error" });
     }
 }
+
 
 
 export const getDetails = async (req,res)=>{
