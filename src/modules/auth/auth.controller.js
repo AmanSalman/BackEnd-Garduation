@@ -35,8 +35,12 @@ export const register = async (req, res) => {
 		return res.status(409).json({message: 'Email already exists'});
 	}
 
+	let role;
+	if(req.body.role){
+		 role = req.body.role
+	}
 	const hashedPassword = await bcrypt.hash(password, parseInt(process.env.SALT));
-	const newUser = await UserModel.create({username, email, password: hashedPassword, phone});
+	const newUser = await UserModel.create({username, email, password: hashedPassword, phone, role});
 	if (! newUser) {
 		return res.status(500).json({message: 'Error while creating user'});
 	}

@@ -6,6 +6,7 @@ import categoryRouter from './modules/category/category.router.js';
 import orderRouter from './modules/order/order.router.js';
 import reviewRouter from './modules/review/review.router.js';
 import userRouter from './modules/user/user.router.js';
+import couponRouter from './modules/coupon/coupon.router.js';
 import cors from 'cors'
 export const Appinit = ( app,express )=>{
     app.use(express.json());
@@ -34,6 +35,7 @@ export const Appinit = ( app,express )=>{
     app.use('/category', categoryRouter);
     app.use('/order', orderRouter);
     app.use('/review', reviewRouter);
+    app.use('/coupon', couponRouter);
 
     app.get('*', (req,res)=>{
         return res.status(404).json({message:"page not found"})
