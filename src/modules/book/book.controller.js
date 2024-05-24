@@ -18,7 +18,8 @@ export const Create = async (req, res) => {
             return res.status(409).json({ message: "book already exists" });
         }
 
-        req.body.finalPrice = price - ((price * (Discount || 0)) / 100);
+        let finalprice = price - ((price * (Discount || 0)) / 100)
+        req.body.finalPrice = finalprice ;
  
         const mainImageUpload = await cloudinary.uploader.upload(req.files.mainImage[0].path, {folder: `${process.env.AppName}/books/${title}/Main`});
         const mainImage = { secure_url: mainImageUpload.secure_url, public_id: mainImageUpload.public_id,Discount, stock:req.body.stock, status:req.body.status };
