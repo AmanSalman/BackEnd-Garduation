@@ -150,8 +150,7 @@ export const Update = async (req,res)=>{
     }
      if(req.body.Discount && req.body.Discount){
         book.Discount = req.body.Discount;
-        let finalprice = book.price - ((book.price * (book.Discount || 0)) / 100)
-        book.finalPrice = finalprice;
+        book.finalPrice = book.price - ((book.price * (book.Discount || 0)) / 100);
      }
     
     if(req.file){
