@@ -128,3 +128,8 @@ export const accept = async(req,res)=>{
   })
   return res.json({message:'success', accepted})
 }
+
+export const acceptedOrders = async (req,res)=>{
+  const accepted = await orderModel.find({status:'accepted'})
+  return res.json({message:'success', accepted})
+}
