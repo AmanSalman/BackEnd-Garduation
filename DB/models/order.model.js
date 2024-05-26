@@ -9,6 +9,10 @@ const OrderSchema = new Schema({
     required:true
   },
   books:[{
+    title:{
+      type:String,
+      required:true
+    },
     bookId:{
       type:Schema.Types.ObjectId,
       ref:'Book',
@@ -49,7 +53,7 @@ const OrderSchema = new Schema({
     type:String,
     required:false
   },
-  couponId:{
+  couponName:{
     type:Schema.Types.ObjectId,
     ref:'Coupon',
     required:false

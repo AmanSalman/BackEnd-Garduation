@@ -29,6 +29,7 @@ export const Create = async (req, res) => {
         const finalPrice = parsedPrice - (parsedPrice * parsedDiscount / 100);
 
         const mainImageUpload = await cloudinary.uploader.upload(req.files.mainImage[0].path, { folder: `${process.env.AppName}/books/${title}/Main` });
+        
         const mainImage = {
             secure_url: mainImageUpload.secure_url,
             public_id: mainImageUpload.public_id

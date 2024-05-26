@@ -6,4 +6,7 @@ const router = Router()
 
 
 router.post ('/', auth(permissions.create), orderController.create )
+router.get('/pending', auth(permissions.getPending), orderController.getPending)
+router.patch('/onway/:id', auth(permissions.update), orderController.onWay)
+router.patch('/:id', auth(permissions.update), orderController.accept)
 export default router;

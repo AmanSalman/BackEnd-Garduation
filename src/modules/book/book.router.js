@@ -14,7 +14,7 @@ router.post('/',auth(permissions.create),fileUpload(fileType.image).fields([
 
 router.get('/', auth(permissions.getAll),bookController.getAll);
 router.get('/Active', bookController.getActive)
-router.get('/:id',auth(permissions.getDetails), bookController.getDetails);
+router.get('/:id', bookController.getDetails);
 
 // router.patch('/:id', auth(),fileUpload(fileType.image).single('image'), bookController.update);
 router.delete('/:id', auth(permissions.delete) , bookController.Delete);

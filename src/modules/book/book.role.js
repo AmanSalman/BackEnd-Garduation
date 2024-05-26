@@ -7,5 +7,4 @@ export const permissions = {
     getActive:[roles.User],
     update:[roles.Admin],
     delete:[roles.Admin],
-    getDetails:[roles.Admin],
 }
