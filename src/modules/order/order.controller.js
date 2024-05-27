@@ -150,3 +150,12 @@ export const acceptedOrders = async (req,res)=>{
   const accepted = await orderModel.find({status:'accepted'})
   return res.json({message:'success', accepted})
 }
+
+export const orderdetails = async (req,res)=>{
+  const {id} = req.params
+  const order =  await orderModel.findById(id)
+  if(!order){
+    return res.status(404).json({message:"order not found"})
+  }
+  return res.json({message:'success', order})
+}
