@@ -44,6 +44,7 @@ export const create = async (req,res)=>{
     book.unitPrice = checkBook.price
     book.Discount = checkBook.Discount
     book.finalPrice = book.quantity * checkBook.finalPrice
+    book.mainImage = checkBook.mainImage
     subTotal+=book.finalPrice
     finalBooksList.push(book)
   }
@@ -111,17 +112,17 @@ export const getPending = async(req, res)=>{
   return res.json({message:'success', pending}) 
 } 
 
-export const onWay = async(req, res)=>{
+export const delivered = async(req, res)=>{
   const {id} = req.params
   const order =  await orderModel.findById(id)
   if(!order){
     return res.status(404).json({message:"order not found"})
   }
-  if(order.status === 'onway'){
-    return res.status(400).json({message:"order already onway"})
+  if(order.status === 'delivered'){
+    return res.status(400).json({message:"order already Delivered"})
   }
   const onway = await orderModel.findOneAndUpdate({_id:id}, {
-    status:'onway'
+    status:'delivered'
   },{
     new:true
   })
