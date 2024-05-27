@@ -132,7 +132,7 @@ export const reject = async (req, res) => {
 
     order.status = 'rejected'
     await order.save();
-    return res.json({ message: 'Order rejected successfully', order });
+    return res.json({ message: 'success', order });
   } catch (error) {
     console.error("Error while rejecting order:", error);
     return res.status(500).json({ message: "Internal server error" });
