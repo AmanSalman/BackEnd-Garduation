@@ -6,8 +6,10 @@ const router = Router()
 
 
 router.post ('/', auth(permissions.create), orderController.create )
+router.get('/count', auth(permissions.getOrdersCounts), orderController.getOrdersCounts)
+router.get('/orders', auth(permissions.getAll), orderController.orders)
 router.get('/pending', auth(permissions.getPending), orderController.getPending)
 router.get('/accept', auth(permissions.getAll), orderController.acceptedOrders)
-router.patch('/onway/:id', auth(permissions.update), orderController.onWay)
 router.patch('/:id', auth(permissions.update), orderController.accept)
-export default router;
+router.patch('/onway/:id', auth(permissions.update), orderController.onWay)
+export default router; 

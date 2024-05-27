@@ -89,6 +89,23 @@ export const create = async (req,res)=>{
   return res.json({message:'success', order})
 } 
 
+export const orders = async (req, res) => {
+  const orders = await orderModel.find()
+  return res.json({message:'success', orders})
+}
+
+export const getOrdersCounts = async (req,res)=>{
+  const orders = await orderModel.find()
+  const acceptedOrders = orders.filter(order =>
+    order.status === 'accepted'
+  ).length
+  const rejectedOrders = orders.filter(order =>
+    order.status ==='rejected'
+  ).length
+  const ordersCount = orders.length
+  return res.status(200).json({message:'success', acceptedOrders, rejectedOrders, ordersCount});
+}
+
 export const getPending = async(req, res)=>{
   const pending = await orderModel.find({status:'pending'})
   return res.json({message:'success', pending}) 
