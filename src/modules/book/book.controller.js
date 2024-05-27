@@ -113,7 +113,9 @@ export const Update = async (req,res)=>{
             return res.status(404).json({message:"category not found"});
         }
         book.categoryId = req.body.categoryId;
-    }
+        book.categoryName = category.name
+    } 
+
 
     if(req.body.isbn) {
         const {isbn} = req.body
