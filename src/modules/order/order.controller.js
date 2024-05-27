@@ -112,6 +112,33 @@ export const getPending = async(req, res)=>{
   return res.json({message:'success', pending}) 
 } 
 
+export const reject = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const order = await orderModel.findById(id);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+    if (order.status === 'rejected') {
+      return res.status(400).json({ message: "Order already rejected" });
+    }
+
+    for (const book of order.books) {
+      await BookModel.findByIdAndUpdate(book.bookId, {
+        $inc: { stock: book.quantity } 
+      });
+    }
+
+
+    order.status = 'rejected'
+    await order.save();
+    return res.json({ message: 'Order rejected successfully', order });
+  } catch (error) {
+    console.error("Error while rejecting order:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  } 
+}
+
 export const delivered = async(req, res)=>{
   const {id} = req.params
   const order =  await orderModel.findById(id)
@@ -121,12 +148,26 @@ export const delivered = async(req, res)=>{
   if(order.status === 'delivered'){
     return res.status(400).json({message:"order already Delivered"})
   }
-  const onway = await orderModel.findOneAndUpdate({_id:id}, {
-    status:'delivered'
-  },{
-    new:true
-  })
+  
+  order.status = 'delivered'
+  order.save()
+  return res.json({message:'success', order})
+}
 
+export const onway = async(req, res)=>{
+  const {id} = req.params
+  const order =  await orderModel.findById(id)
+  if(!order){
+    return res.status(404).json({message:"order not found"})
+  }
+  if(order.status === 'onway'){
+    return res.status(400).json({message:"order already onway"})
+  }
+  if(order.status != 'accepted'){
+    return res.status(400).json({message:"order not accepted"})
+  }
+  order.status = 'onway'
+  await order.save()
   return res.json({message:'success', onway})
 }
 
@@ -139,12 +180,11 @@ export const accept = async(req,res)=>{
   if(order.status === 'accepted'){
     return res.status(400).json({message:"order already accepted"})
   }
-  const accepted = await orderModel.findOneAndUpdate({_id:id}, {
-    status:'accepted'
-  },{
-    new:true
-  })
-  return res.json({message:'success', accepted})
+
+  order.status = 'accepted'
+  order.save()
+
+  return res.json({message:'success', order})
 }
 
 export const acceptedOrders = async (req,res)=>{
@@ -160,3 +200,5 @@ export const orderdetails = async (req,res)=>{
   }
   return res.json({message:'success', order})
 }
+
+

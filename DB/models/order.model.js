@@ -33,7 +33,7 @@ const OrderSchema = new Schema({
     },
     mainImage:{
       type:Object,
-      required:true,
+      // required:true,
   },
   }],
   finalPrice:{
@@ -51,7 +51,7 @@ const OrderSchema = new Schema({
   status:{
     type:String,
     default:'pending',
-    enum:['pending','accepted', 'rejected', 'delivered']
+    enum:['pending','accepted', 'rejected', 'delivered', 'onway']
   },
   rejectedReason:{
     type:String,

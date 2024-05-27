@@ -34,7 +34,7 @@ const BookSChema = new Schema({
     },
     mainImage:{
         type:Object,
-        required:true,
+        // required:true,
     },
     subImages:[{
         type:Object,
