@@ -202,3 +202,75 @@ export const orderdetails = async (req,res)=>{
 }
 
 
+export const acceptAll = async (req, res) => {
+  try {
+    const result = await orderModel.updateMany(
+      { status: 'pending' },
+      { $set: { status: 'accepted' } }
+    );
+
+    if (result.modifiedCount > 0) {
+      return res.status(200).json({ message: 'All pending orders have been accepted', modifiedCount: result.modifiedCount });
+    } else {
+      return res.status(200).json({ message: 'No pending orders to accept' });
+    }
+  } catch (error) {
+    console.error("Error accepting all pending orders:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const rejectAll = async (req, res) => {
+  try {
+    const result = await orderModel.updateMany(
+      { status: 'pending' },
+      { $set: { status: 'rejected' } }
+    );
+
+    if (result.modifiedCount > 0) {
+      return res.status(200).json({ message: 'All pending orders have been accepted', modifiedCount: result.modifiedCount });
+    } else {
+      return res.status(200).json({ message: 'No pending orders to accept' });
+    }
+  } catch (error) {
+    console.error("Error accepting all pending orders:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const onwayAll = async (req, res) => {
+  try {
+    const result = await orderModel.updateMany(
+      { status: 'accepted' },
+      { $set: { status: 'onway' } }
+    );
+
+    if (result.modifiedCount > 0) {
+      return res.status(200).json({ message: 'All pending orders have been accepted', modifiedCount: result.modifiedCount });
+    } else {
+      return res.status(200).json({ message: 'No pending orders to accept' });
+    }
+  } catch (error) {
+    console.error("Error accepting all pending orders:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+export const deliveredAll = async (req, res) => {
+  try {
+    const result = await orderModel.updateMany(
+      { status: 'onway' },
+      { $set: { status: 'delivered' } }
+    );
+
+    if (result.modifiedCount > 0) {
+      return res.status(200).json({ message: 'All pending orders have been accepted', modifiedCount: result.modifiedCount });
+    } else {
+      return res.status(200).json({ message: 'No pending orders to accept' });
+    }
+  } catch (error) {
+    console.error("Error accepting all pending orders:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};

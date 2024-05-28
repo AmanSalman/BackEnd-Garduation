@@ -15,4 +15,8 @@ router.patch('/:id', auth(permissions.update), orderController.accept)
 router.patch('/reject/:id', auth(permissions.update), orderController.reject)
 router.patch('/delivered/:id', auth(permissions.update), orderController.delivered)
 router.patch('/onway/:id', auth(permissions.update), orderController.onway)
+router.put('/accept', auth(permissions.update), orderController.acceptAll)
+router.put('/reject', auth(permissions.update), orderController.rejectAll)
+router.put('/onwayAll', auth(permissions.update), orderController.onwayAll)
+router.put('/deliveredAll', auth(permissions.update), orderController.deliveredAll)
 export default router; 
