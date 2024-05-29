@@ -6,6 +6,7 @@ const router = Router()
 
 
 router.post ('/', auth(permissions.create), orderController.create)
+router.get('/:id', auth(permissions.getAll), orderController.userOrders)
 router.get('/getdetails/:id', auth(permissions.getDetails), orderController.orderdetails)
 router.get('/orders', auth(permissions.getAll), orderController.orders)
 router.patch('/:id', auth(permissions.update), orderController.updateOrderStatus)
