@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import cartModel from "../../../DB/models/cart.model.js"
 import { CouponModel } from "../../../DB/models/coupon.model.js"
 import { orderModel } from "../../../DB/models/order.model.js";
