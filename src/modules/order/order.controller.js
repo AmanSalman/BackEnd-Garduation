@@ -310,14 +310,28 @@ export const updateAll = async (req,res)=>{
 }
 
 
-export const userOrders = async (req,res)=>{
-  const {id} = req.params
-  const user = await UserModel.findById(id)
-  if(!user){
-    return res.status(404).json({message:"user not found"})
+export const userOrders = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Validate ID format (if using MongoDB, check for valid ObjectId)
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid user ID format" });
+    }
+
+    // Find user by ID
+    const user = await UserModel.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Find orders for the user
+    const orders = await orderModel.find({ userId: id });
+    
+    return res.status(200).json({ message: 'Success', orders });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server error" });
   }
-  const orders = await orderModel.find({
-    userId:id
-  })
-  return res.status(200).json({message:'success', orders})
-}
+};
