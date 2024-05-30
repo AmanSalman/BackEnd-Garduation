@@ -71,13 +71,19 @@ export const Create = async (req, res) => {
 
 
 export const getDetails = async (req,res)=>{
-    const book = await BookModel.findById(req.params.id);
+    const book = await BookModel.findById(req.params.id).populate('reviews');
     return res.status(200).json({message:'success', book});
 }
 
 
 export const getAll = async (req,res)=>{
-    const Books = await BookModel.find();
+    const Books = await BookModel.find({}).populate({
+        path:'reviews',
+        populate:{
+            path:'userId',
+            select:'name'
+        }
+    });
     return res.status(200).json({message:'success', Books});
 }
 
@@ -116,7 +122,6 @@ export const Update = async (req,res)=>{
         book.categoryName = category.name
     } 
 
-
     if(req.body.isbn) {
         const {isbn} = req.body
         const checkBook = await BookModel.findOne({isbn:isbn});
@@ -149,7 +154,7 @@ export const Update = async (req,res)=>{
         book.status = req.body.status;
     }
 
-    if(req.body.stock && req.body.stock>0){
+    if(req.body.stock && req.body.stock>=0){
         book.stock = req.body.stock;
     }
      if(req.body.Discount && req.body.Discount){

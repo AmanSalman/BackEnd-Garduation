@@ -2,7 +2,7 @@ import { UserModel } from "../../../DB/models/user.model.js"
 
 
 export const getAll = async (req,res)=> {
-    const users = await UserModel.find();
+    const users = await UserModel.find().select('username email phone status role');
     return res.status(200).json({message:"success",users});
 }
 
@@ -15,8 +15,9 @@ export const Disable = async (req,res)=> {
     if(user.status === 'Disabled'){
         return res.status(400).json({message:"user already disabled"});
     }
-    const Disabled = await UserModel.findByIdAndUpdate(user.id, {status: 'Disabled'}, {new: true});
-    return res.status(200).json({message:"success",Disabled});
+    user.status = 'Disabled';
+    user.save();
+    return res.status(200).json({message:"success",user});
     
 }
  
@@ -29,8 +30,10 @@ export const Activate = async (req,res)=> {
     if(user.status === 'Activated'){
         return res.status(400).json({message:"user already Activated"});
     }
-    const Activated = await UserModel.findByIdAndUpdate(user.id, {status: 'Activated'}, {new: true});
-    return res.status(200).json({message:"success",Activated});
+    user.status = 'Activated'
+    user.save()
+ 
+    return res.status(200).json({message:"success",user});
     
 }  
 

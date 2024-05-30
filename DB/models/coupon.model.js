@@ -7,11 +7,9 @@ const couponSchema =new Schema({
     unique:true 
   },
   usedBy:[{
-    userId:{
       type:Types.ObjectId,
       ref:'User',
       required:true
-    } 
   }],
   Amount:{
     type:Number,

@@ -180,7 +180,7 @@ export const create = async (req,res)=>{
       return res.status(400).json({message:"coupon is inactive"})
     }
 
-    if(coupon.usedBy.some(user => user._id.toString() === req.user._id.toString())){
+    if(coupon && coupon.usedBy && coupon.usedBy.includes(req.user._id)){
       return res.status(400).json({message:"coupon already used"})
     }
     req.body.coupon = coupon
@@ -189,11 +189,11 @@ export const create = async (req,res)=>{
   let finalBooksList = []
   let subTotal = 0 
   for(let book of req.body.books){
-    const checkBook = await BookModel.findById({
-      _id:book.bookId,
-      stock:{$gte:book.quantity}
-    })
-    if(!checkBook){
+    const checkBook = await BookModel.findOne({
+      _id: book.bookId,
+      stock: { $gte: book.quantity }
+    });
+        if(!checkBook){
       return res.status(404).json({message:"book quantity not available"})
     }
 
@@ -307,4 +307,15 @@ export const updateAll = async (req,res)=>{
   } else {
     return res.status(200).json({ message: 'orders to change' });
   }
+}
+
+export const userOrders = async (req,res)=>{
+  const orders = await orderModel.find({userId:req.user._id})
+  return res.json({message:'success', orders})
+}
+
+export const userOrdersAdmin = async (req,res)=>{
+  const {id} = req.params
+  const orders = await orderModel.find({userId:id});
+  return res.json({message:'success', orders})
 }

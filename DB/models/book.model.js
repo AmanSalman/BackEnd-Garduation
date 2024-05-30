@@ -76,4 +76,11 @@ const BookSChema = new Schema({
 });
 
 
+BookSChema.virtual ('reviews', {
+    ref: 'Review',
+    localField: '_id',
+    foreignField: 'bookId',
+})
+
+
 export const BookModel = model('Book', BookSChema);

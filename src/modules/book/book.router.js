@@ -3,9 +3,10 @@ import * as bookController from './book.controller.js';
 import fileUpload, { fileType } from "../../utls/multer.js";
 import { auth } from './../../middleware/auth.js';
 import { permissions } from "./book.role.js";
+import ReviewRouter from '../review/review.router.js'
 const router = Router()
 
-
+router.use('/:bookId/review', ReviewRouter )
 router.post('/',auth(permissions.create),fileUpload(fileType.image).fields([
     { name: 'mainImage', maxCount: 1 },
     { name: 'subImages', maxCount: 10 }
@@ -23,4 +24,6 @@ router.patch('/:id', auth(permissions.update), fileUpload(fileType.image).single
 router.patch ('/:id/subimage',fileUpload(fileType.image).fields([
     { name: 'subImages', maxCount: 10 }
 ]), auth(permissions.update), bookController.addsubimage)
+
+
 export default router;
