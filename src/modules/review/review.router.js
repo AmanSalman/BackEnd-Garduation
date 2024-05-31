@@ -5,6 +5,6 @@ import { auth } from "../../middleware/auth.js";
 const router = Router({mergeParams:true})
 
 router.post('/', auth(permissions.create), reviewController.create );
-
-
+router.delete('/:id', auth(permissions.delete), reviewController.remove)
+router.get('/:id', auth(permissions.getAll), reviewController.get)
 export default router;

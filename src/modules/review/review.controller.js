@@ -32,3 +32,26 @@ export const create = async (req,res) =>{
 
   return res.status(201).json({message:'success', newReview})
 }
+
+
+export const remove = async (req,res) =>{
+  const {id} = req.params
+  const review = await ReviewModel.findById(id)
+  if(!review){
+    return res.status(404).json({message:'review not found'})
+  }
+   await ReviewModel.findByIdAndDelete(id)
+
+  return res.status(200).json({message:'success'})
+}
+
+
+export const get = async (req,res) =>{
+  const {id} = req.params
+  const review = await ReviewModel.findById(id)
+  if(!review){
+    return res.status(404).json({message:'review not found'})
+  }
+  return res.status(200).json({message:'success', review})
+}
+
