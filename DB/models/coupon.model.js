@@ -9,7 +9,6 @@ const couponSchema =new Schema({
   usedBy:[{
       type:Types.ObjectId,
       ref:'User',
-      required:true
   }],
   Amount:{
     type:Number,
