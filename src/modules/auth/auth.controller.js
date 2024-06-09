@@ -84,6 +84,7 @@ export const sendCode = async (req, res) => {
 }
 
 
+
 export const forgetPassword = async (req, res) => {
 	const {email, password, code} = req.body
 	const user = await UserModel.findOne({email: email})

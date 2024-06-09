@@ -164,7 +164,7 @@ import { BookModel } from './../../../DB/models/book.model.js';
 
 export const create = async (req,res)=>{
   const cart = await cartModel.findOne({userId:req.user._id})
-  if(!cart){
+  if(!cart || cart.books.length == 0 ){
     return res.status(400).json({message:"cart is empty"})
   }
 
@@ -245,7 +245,7 @@ export const create = async (req,res)=>{
   
   }
 
-  return res.json({message:'success', order})
+  return res.status(201).json({message:'success', order})
 } 
 
 export const orders = async (req, res) => {

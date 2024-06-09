@@ -34,7 +34,7 @@ const BookSChema = new Schema({
     },
     mainImage:{
         type:Object,
-        // required:true,
+        required:true,
     },
     subImages:[{
         type:Object,
@@ -81,6 +81,8 @@ BookSChema.virtual ('reviews', {
     localField: '_id',
     foreignField: 'bookId',
 })
+
+
 
 
 export const BookModel = model('Book', BookSChema);

@@ -18,24 +18,14 @@ const UserSchema = new Schema({
 		type: String,
 		required: true
 	},
-	image: {
-		type: Object
-	},
 	phone: {
 		type: String,
 		required:true,
 		unique: true,
 	},
-	address: {
-		type: String
-	},
 	confirmEmail: {
 		type: Boolean,
 		default: false
-	},
-	gender: {
-		type: String,
-		enum: ['Male', 'Female']
 	},
 	status: {
 		type: String,

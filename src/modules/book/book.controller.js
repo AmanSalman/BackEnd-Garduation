@@ -1,4 +1,3 @@
-import slugify from "slugify";
 import { BookModel } from "../../../DB/models/book.model.js";
 import { CategoryModel } from "../../../DB/models/category.model.js";
 import cloudinary from "../../utls/cloudinary.js";
@@ -88,8 +87,19 @@ export const getAll = async (req,res)=>{
 }
 
 export const getActive = async (req,res) =>{
-    const books = await BookModel.find({status:'Active'});
-    return res.status(200).json({message:'success', books});
+    const {query} = req.query
+    let results
+    if(!query){
+        results = await BookModel.find({status:'Active'});
+    } else{
+        results = await BookModel.find({status:'Active', 
+            title: new RegExp(query, 'i')
+        });
+    }
+    if(results.length === 0){
+        return res.status(404).json({message:"No books found"})
+    }
+    return res.status(200).json({message:'success', books:results });
 }
 
 
