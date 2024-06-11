@@ -1,5 +1,6 @@
 import { UserModel } from "../../DB/models/user.model.js";
 import jwt from 'jsonwebtoken';
+import { AppError } from "../utls/AppError.js";
 
 export  const roles = {
     Admin:'Admin',
@@ -11,18 +12,18 @@ export const auth = (roleAccess=[])=>{
         const {authorization} = req.headers;
         console.log(authorization)
         if(!authorization || !authorization.startsWith(process.env.BEARERTOKEN)){
-            return res.status(401).json({message:"invalid authorization"});
+            return next(new AppError(`invalid authorization`, 401))
           } 
           
         const token = authorization.split(process.env.BEARERTOKEN)[1];
         const decoded = jwt.verify(token,process.env.JWT_SECRET); 
         if(!decoded) {
-            return res.status(401).json({message:"unauthorized2"});
+            return next(new AppError(`invalid authorization`, 401))
         }
 
         const user = await UserModel.findById(decoded.id);
         if(!user) {
-            return res.status(401).json({message:"user not found"});
+            return next(new AppError(`user not found`, 404))
         } 
 
         console.log(roleAccess.includes(user.role))
@@ -34,8 +35,6 @@ export const auth = (roleAccess=[])=>{
         // req.user = user;
         // next();
 
-       return res.status(403).json({message:"access denied"});
-        
-
+       return next(new AppError(`access denied`, 403))
     }
 }

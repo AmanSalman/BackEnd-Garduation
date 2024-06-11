@@ -2,6 +2,7 @@ import cartModel from "../../../DB/models/cart.model.js"
 import { CouponModel } from "../../../DB/models/coupon.model.js"
 import { orderModel } from "../../../DB/models/order.model.js";
 import { UserModel } from "../../../DB/models/user.model.js";
+import { AppError } from "../../utls/AppError.js";
 import { BookModel } from './../../../DB/models/book.model.js';
 
 // export const getPending = async(req, res)=>{
@@ -165,7 +166,7 @@ import { BookModel } from './../../../DB/models/book.model.js';
 export const create = async (req,res)=>{
   const cart = await cartModel.findOne({userId:req.user._id})
   if(!cart || cart.books.length == 0 ){
-    return res.status(400).json({message:"cart is empty"})
+    return next(new AppError(`cart is empty`, 400))
   }
 
   req.body.books = cart.books
@@ -174,14 +175,14 @@ export const create = async (req,res)=>{
   if(req.body.couponName){
     coupon = await CouponModel.findOne({name:req.body.couponName})
     if(!coupon){
-      return res.status(404).json({message:"coupon not found"})
+      return next(new AppError(`coupon not found`, 404))
     }
     if(coupon.status == 'inactive'){
-      return res.status(400).json({message:"coupon is inactive"})
+      return next(new AppError(`coupon is inactive`, 400))
     }
 
     if(coupon && coupon.usedBy && coupon.usedBy.includes(req.user._id)){
-      return res.status(400).json({message:"coupon already used"})
+      return next(new AppError(`coupon already used`, 400))
     }
     req.body.coupon = coupon
   }
@@ -194,7 +195,7 @@ export const create = async (req,res)=>{
       stock: { $gte: book.quantity }
     });
         if(!checkBook){
-      return res.status(404).json({message:"book quantity not available"})
+          return next(new AppError(`book quantity not available`, 404))
     }
 
     book = book.toObject()
@@ -269,7 +270,7 @@ export const orderdetails = async (req,res)=>{
   const {id} = req.params
   const order =  await orderModel.findById(id)
   if(!order){
-    return res.status(404).json({message:"order not found"})
+    return next(new AppError(`order not found`, 404))
   }
   return res.json({message:'success', order})
 }
@@ -279,11 +280,11 @@ export const updateOrderStatus = async (req,res) =>{
   const {status} = req.body
   const validStatuses = ['pending','accepted', 'rejected', 'delivered', 'onway'];
   if (!validStatuses.includes(status)) {
-    return res.status(400).json({ message: 'Invalid status' });
+    return next(new AppError(`Invalid status`, 400))
   }
   const order =  await orderModel.findById(id)
   if(!order){
-    return res.status(404).json({message:"order not found"})
+    return next(new AppError(`order not found`, 404))
   }
   order.status = status
   order.save()
@@ -294,7 +295,7 @@ export const updateAll = async (req,res)=>{
   const {currentStatus, newStatus} = req.body
   const validStatuses = ['pending','accepted', 'rejected', 'delivered', 'onway'];
   if (!validStatuses.includes(currentStatus) ||!validStatuses.includes(newStatus)) {
-    return res.status(400).json({ message: 'Invalid status' });
+    return next(new AppError(`Invalid status`, 400))
   }
 
   const result = await orderModel.updateMany(

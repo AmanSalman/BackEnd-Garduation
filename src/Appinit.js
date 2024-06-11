@@ -28,7 +28,7 @@ export const Appinit = ( app,express )=>{
     }));
     app.get('/', (req,res)=>{
         return res.status(200).json({message:"Welcome"})
-     }) 
+     })
     app.use('/auth', authRouter);
     app.use('/user', userRouter)
     app.use('/book', bookRouter);
@@ -41,5 +41,10 @@ export const Appinit = ( app,express )=>{
 
     app.get('*', (req,res)=>{
         return res.status(404).json({message:"page not found"})
+     })
+
+
+     app.use((err,req,res,next)=>{
+      res.status(err.statusCode).json({message:err.message})
      })
 }

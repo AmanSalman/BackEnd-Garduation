@@ -1,5 +1,6 @@
 import { wishListModel } from "../../../DB/models/wishlist.model.js";
-export const Create = async (req, res) => {
+import { AppError } from "../../utls/AppError.js";
+export const Create = async (req, res,next) => {
     const {bookId} = req.body;
     const getlist = await wishListModel.findOne({userId:req.user._id})
     if(!getlist){
@@ -12,13 +13,13 @@ export const Create = async (req, res) => {
 
     for(let i=0; i<getlist.books.length; i++){
         if(getlist.books[i].bookId == bookId){
-            return res.status(400).json({message:"book already in wishList"})
+            return next(new AppError(`book already in wishList`, 400))
         }
     }
 
-    cart.books.push({bookId})
-    await cart.save()
-    return res.json({message:"success", wishList})
+    getlist.books.push({bookId})
+    await getlist.save()
+    return res.json({message:"success", getlist})
 }  
 
 export const Remove = async (req, res) => {
@@ -36,7 +37,7 @@ export const Remove = async (req, res) => {
 
 
 export const Clear = async (req,res) =>{ 
-    const cart = await wishListModel.findOneAndUpdate({
+    const wishlist = await wishListModel.findOneAndUpdate({
         userId:req.user._id
     }, {
         books:[]

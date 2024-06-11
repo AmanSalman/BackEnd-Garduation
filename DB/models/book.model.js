@@ -10,6 +10,7 @@ const BookSChema = new Schema({
     title:{
         type:String,
         required:true,
+        minlength: 3,
     },
     price:{
         type:Number,

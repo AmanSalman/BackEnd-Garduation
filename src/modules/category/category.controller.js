@@ -2,6 +2,7 @@ import slugify from "slugify";
 import { CategoryModel } from "../../../DB/models/category.model.js";
 import cloudinary from './../../utls/cloudinary.js';
 import { BookModel } from "../../../DB/models/book.model.js";
+import { AppError } from "../../utls/AppError.js";
 
 // export const Create = async(req,res)=>{
 //     req.body.name = req.body.name.toLowerCase();
@@ -15,14 +16,14 @@ import { BookModel } from "../../../DB/models/book.model.js";
 //     return res.json({message:"success",category})
 // }
 
-export const Create = async (req, res) => {
+export const Create = async (req, res,next) => {
         if (!req.file) {
-            return res.status(400).json({ message: "No file attached" });
+            return next(new AppError(`No file attached`, 400))
         }
 
         req.body.name = req.body.name.toLowerCase();
         if (await CategoryModel.findOne({ name: req.body.name })) {
-            return res.status(409).json({ message: "Category already exists" });
+            return next(new AppError(`Category already exists`, 409))
         }
 
         req.body.slug = slugify(req.body.name);
@@ -51,21 +52,21 @@ export const getDetails = async (req,res)=>{
     return res.status(200).json({message:'success', category})
 }
 
-export const getbooks = async (req,res)=>{
+export const getbooks = async (req,res,next)=>{
     const {id} = req.params;
     const books = await BookModel.find({categoryId:id})
     return res.status(200).json({message:'success', books});
 
 }
 
-export const update = async (req,res)=>{
+export const update = async (req,res,next)=>{
     const category = await CategoryModel.findById(req.params.id);
     if(!category){
-        return res.status(404).json({message:"category not found"})
+        return next(new AppError(`Category not found`, 404))
     }
     category.name = req.body.name.toLowerCase();
     if(await CategoryModel.findOne({name:req.body.name, _id:{$ne:req.params.id}})){
-        return res.status(409).json({message:"category already exists"});
+        return next(new AppError(`category already exists`, 409))
     }
     category.slug = slugify(req.body.name);
     if(req.file){
@@ -81,11 +82,11 @@ export const update = async (req,res)=>{
     return res.status(200).json({message:'success',category});
 } 
 
-export const Delete = async (req,res)=>{
+export const Delete = async (req,res,next)=>{
     const {id} = req.params;
     const category = await CategoryModel.findById(id);
     if(!category){
-        return res.status(404).json({message:"category not found"});
+        return next(new AppError(`Category not found`, 404))
     }
     await cloudinary.uploader.destroy(category.image.public_id);
     await CategoryModel.findByIdAndDelete(id);

@@ -1,4 +1,5 @@
 import { UserModel } from "../../../DB/models/user.model.js"
+import { AppError } from "../../utls/AppError.js";
 
 
 export const getAll = async (req,res)=> {
@@ -10,25 +11,24 @@ export const Disable = async (req,res)=> {
     const {id} = req.params;
     const user = await UserModel.findById(id);
     if(!user){
-        return res.status(404).json({message:"user not found"});
+        return next(new AppError(`user not found`, 404))
     }
     if(user.status === 'Disabled'){
-        return res.status(400).json({message:"user already disabled"});
+        return next(new AppError(`user already disabled`, 400))
     }
     user.status = 'Disabled';
     user.save();
     return res.status(200).json({message:"success",user});
-    
 }
  
 export const Activate = async (req,res)=> {
     const {id} = req.params;
     const user = await UserModel.findById(id);
     if(!user){
-        return res.status(404).json({message:"user not found"});
+        return next(new AppError(`user not found`, 404));
     }
     if(user.status === 'Activated'){
-        return res.status(400).json({message:"user already Activated"});
+        return next(new AppError(`user already Activated`, 400))
     }
     user.status = 'Activated'
     user.save()

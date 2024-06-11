@@ -1,28 +1,26 @@
 import { BookModel } from "../../../DB/models/book.model.js";
 import { CategoryModel } from "../../../DB/models/category.model.js";
+import { AppError } from "../../utls/AppError.js";
 import cloudinary from "../../utls/cloudinary.js";
 
 
-export const Create = async (req, res) => {
-    try {
+export const Create = async (req, res,next) => {
         const { title, price, Discount, categoryName, isbn, description, publishingHouse, stock, status } = req.body;
-
-        // Validate and parse inputs
         const parsedPrice = parseFloat(price);
         const parsedDiscount = parseFloat(Discount) || 0;
 
         if (isNaN(parsedPrice) || isNaN(parsedDiscount)) {
-            return res.status(400).json({ message: "Invalid price or discount value" });
+            return next(new AppError(`Invalid price or discount value`, 400))
         }
 
         const checkCategory = await CategoryModel.findOne({ name: categoryName });
         if (!checkCategory) {
-            return res.status(404).json({ message: "Category not found" });
+            return next(new AppError(`Category not found`, 404))
         }
 
         const checkBook = await BookModel.findOne({ isbn });
         if (checkBook) {
-            return res.status(409).json({ message: "Book already exists" });
+            return next(new AppError(`Book already exists`, 409))
         }
 
         const finalPrice = parsedPrice - (parsedPrice * parsedDiscount / 100);
@@ -35,13 +33,15 @@ export const Create = async (req, res) => {
         };
 
         const subImages = [];
-        for (const file of req.files.subImages) {
-            const subImageUpload = await cloudinary.uploader.upload(file.path, { folder: `${process.env.AppName}/books/${title}/Sub` });
-            const subImage = {
-                secure_url: subImageUpload.secure_url,
-                public_id: subImageUpload.public_id
-            };
-            subImages.push(subImage);
+        if(req.files.subImages){
+            for (const file of req.files.subImages) {
+                const subImageUpload = await cloudinary.uploader.upload(file.path, { folder: `${process.env.AppName}/books/${title}/Sub` });
+                const subImage = {
+                    secure_url: subImageUpload.secure_url,
+                    public_id: subImageUpload.public_id
+                };
+                subImages.push(subImage);
+            }
         }
 
         const book = await BookModel.create({
@@ -61,10 +61,6 @@ export const Create = async (req, res) => {
         });
 
         return res.status(201).json({ message: "success", book });
-    } catch (error) {
-        console.error("Error:", error);
-        return res.status(500).json({ message: "Internal server error" });
-    }
 }
 
 
@@ -86,7 +82,7 @@ export const getAll = async (req,res)=>{
     return res.status(200).json({message:'success', Books});
 }
 
-export const getActive = async (req,res) =>{
+export const getActive = async (req,res,next) =>{
     const {query} = req.query
     let results
     if(!query){
@@ -97,17 +93,17 @@ export const getActive = async (req,res) =>{
         });
     }
     if(results.length === 0){
-        return res.status(404).json({message:"No books found"})
+        return next(new AppError(`No books found`, 404))
     }
     return res.status(200).json({message:'success', books:results });
 }
 
 
-export const Delete = async (req,res)=>{
+export const Delete = async (req,res,next)=>{
     const {id} = req.params;
     const book = await BookModel.findById(id);
     if(!book){
-        return res.status(404).json({message:"book not found"});
+        return next(new AppError(`book not found`, 404))
     }
     if(book.mainImage){
         await cloudinary.uploader.destroy(book.mainImage.public_id);
@@ -117,16 +113,16 @@ export const Delete = async (req,res)=>{
 }
 
 
-export const Update = async (req,res)=>{
+export const Update = async (req,res,next)=>{
     const book = await BookModel.findById(req.params.id);
     if(!book){
-        return res.status(404).json({message:"Book not found"})
+        return next(new AppError(`book not found`, 404))
     }
 
     if(req.body.categoryId){
         const category = await CategoryModel.findById(req.body.categoryId);
         if(!category){
-            return res.status(404).json({message:"category not found"});
+            return next(new AppError(`Category not found`, 404))
         }
         book.categoryId = req.body.categoryId;
         book.categoryName = category.name
@@ -191,8 +187,6 @@ export const Update = async (req,res)=>{
 export const addsubimage = async (req,res)=>{
     const { id } = req.params;
     const { subImages } = req.files;
-
-    try {
         const book = await BookModel.findById(id); 
         const updatedSubImages = [];
 
@@ -208,24 +202,20 @@ export const addsubimage = async (req,res)=>{
         await book.save();
 
         res.json({ message: 'success', updatedSubImages });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Failed to update subimages' });
-    }
 }
 
-export const deleteSubImage = async (req, res) => {
+export const deleteSubImage = async (req, res,next) => {
     const { id } = req.params;
     const { public_id } = req.query;
-    try {
+
         const book = await BookModel.findById(id); 
         if(!book){
-            return res.status(404).json({ message: 'Book not found' });
+            return next(new AppError(`book not found`, 404))
         }
         const subImageIndex = book.subImages.findIndex(image => image.public_id === public_id);
 
         if (subImageIndex === -1) {
-            return res.status(404).json({ message: 'Subimage not found' });
+            return next(new AppError(`Subimage not found`, 404))
         }
 
         // Delete the subimage from Cloudinary
@@ -238,8 +228,4 @@ export const deleteSubImage = async (req, res) => {
         await book.save();
 
         res.json({ message: 'success',book });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Failed to delete subimage' });
-    }
 }
