@@ -86,11 +86,11 @@ export const getActive = async (req,res,next) =>{
     const {query} = req.query
     let results
     if(!query){
-        results = await BookModel.find({status:'Active'});
+        results = await BookModel.find({status:'Active'}).populate('reviews');
     } else{
         results = await BookModel.find({status:'Active', 
             title: new RegExp(query, 'i')
-        });
+        }).populate('reviews');
     }
     if(results.length === 0){
         return next(new AppError(`No books found`, 404))

@@ -12,10 +12,6 @@ const wishListSchema = new Schema({
             type:Types.ObjectId,
             ref:'Book',
             required:true
-        },
-        quantity:{
-            type:Number,
-            default:1
         }
     }]
 },{

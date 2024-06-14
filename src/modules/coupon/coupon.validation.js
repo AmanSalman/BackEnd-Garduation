@@ -7,6 +7,9 @@ export const createCouponSchema = Joi.object({
 })
 
 
+
+
+
 export const updateCouponSchema = Joi.object({
   id:Joi.string().hex().length(24).required(),
   name:Joi.string().min(3),

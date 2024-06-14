@@ -163,7 +163,7 @@ import { BookModel } from './../../../DB/models/book.model.js';
 //   }
 // };
 
-export const create = async (req,res)=>{
+export const create = async (req,res,next)=>{
   const cart = await cartModel.findOne({userId:req.user._id})
   if(!cart || cart.books.length == 0 ){
     return next(new AppError(`cart is empty`, 400))
@@ -180,7 +180,6 @@ export const create = async (req,res)=>{
     if(coupon.status == 'inactive'){
       return next(new AppError(`coupon is inactive`, 400))
     }
-
     if(coupon && coupon.usedBy && coupon.usedBy.includes(req.user._id)){
       return next(new AppError(`coupon already used`, 400))
     }
@@ -195,7 +194,7 @@ export const create = async (req,res)=>{
       stock: { $gte: book.quantity }
     });
         if(!checkBook){
-          return next(new AppError(`book quantity not available`, 404))
+          return next(new AppError(`book quantity not available`, 400))
     }
 
     book = book.toObject()
@@ -266,7 +265,7 @@ export const getOrdersCounts = async (req,res)=>{
   return res.status(200).json({message:'success', acceptedOrders, rejectedOrders, ordersCount});
 }
 
-export const orderdetails = async (req,res)=>{
+export const orderdetails = async (req,res,next)=>{
   const {id} = req.params
   const order =  await orderModel.findById(id)
   if(!order){
@@ -275,7 +274,7 @@ export const orderdetails = async (req,res)=>{
   return res.json({message:'success', order})
 }
 
-export const updateOrderStatus = async (req,res) =>{
+export const updateOrderStatus = async (req,res,next) =>{
   const {id} = req.params
   const {status} = req.body
   const validStatuses = ['pending','accepted', 'rejected', 'delivered', 'onway'];
@@ -291,7 +290,7 @@ export const updateOrderStatus = async (req,res) =>{
   return res.json({message:'success', order})
 }
 
-export const updateAll = async (req,res)=>{
+export const updateAll = async (req,res,next)=>{
   const {currentStatus, newStatus} = req.body
   const validStatuses = ['pending','accepted', 'rejected', 'delivered', 'onway'];
   if (!validStatuses.includes(currentStatus) ||!validStatuses.includes(newStatus)) {

@@ -19,16 +19,6 @@ const CategorySchema = new Schema ({
 		default: 'active',
 		enum: ['active', 'inactive']
 	},
-    createdBY:{ 
-        type:Types.ObjectId,
-        ref:'User',
-        // required:true
-    },
-    updatedBY:{
-        type:Types.ObjectId,
-        ref:'User',
-        // required:true
-    }
 })
 
 
