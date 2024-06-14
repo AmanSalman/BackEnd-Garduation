@@ -86,7 +86,13 @@ export const getActive = async (req,res,next) =>{
     const {query} = req.query
     let results
     if(!query){
-        results = await BookModel.find({status:'Active'}).populate('reviews');
+        results = await BookModel.find({status:'Active'}).populate({
+            path:'reviews',
+            populate:{
+                path:'userId',
+                select:'username'
+            }
+        })
     } else{
         results = await BookModel.find({status:'Active', 
             title: new RegExp(query, 'i')
