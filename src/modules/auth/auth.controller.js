@@ -44,7 +44,7 @@ export const register = async (req, res,next) => {
 	if (! newUser) {
 		return next(new AppError(`Error while creating user`, 500))
 	}
-	const token = jwt.sign({role,email }, process.env.JWT_SECRET)
+	const token = jwt.sign({email}, process.env.SIGNConfirm)
 	await sendEmail({to:email,subject: 'welcome',userName:username, token})
 	//         await sendEmail({subject:'Kids Skills Store', html :`
 
