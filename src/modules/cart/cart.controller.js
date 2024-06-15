@@ -8,7 +8,7 @@ export const Create = async (req, res) => {
             userId:req.user._id,
             books:{bookId}
         })
-        return res.json({message:"success", cart:newCart})
+        return res.status(201).json({message:"success", cart:newCart})
     }
 
     for(let i=0; i<cart.books.length; i++){

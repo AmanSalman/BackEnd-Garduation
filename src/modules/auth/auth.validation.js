@@ -4,7 +4,8 @@ export const registerSchema = Joi.object({
   username: Joi.string().min(3).max(20).required(),
   email: Joi.string().email().required(),
   password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*#?&]+$/).required(),
-  phone: Joi.string().pattern(/^(?:\+972|0)?[5-9]\d{8}$|^(?:\+970|0)?[5-9]\d{8}$/).required()
+  phone: Joi.string().pattern(/^(?:\+972|0)?[5-9]\d{8}$|^(?:\+970|0)?[5-9]\d{8}$/).required(),
+  role:Joi.string().valid('Admin','User'),
 });
 
 export const loginSchema = Joi.object({
