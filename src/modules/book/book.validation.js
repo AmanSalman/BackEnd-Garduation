@@ -36,8 +36,14 @@ export const CreateBookSchema = Joi.object({
 
 
 export const IdValidationSchema = Joi.object({
-  id:Joi.string().hex().length(24)
+  id:Joi.string().hex().length(24).required(),
 });
+
+export const deleteValidationSchema = Joi.object({
+  id:Joi.string().hex().length(24).required(),
+  public_id:Joi.string().required()
+});
+
 
 export const UpdateBookSchema = Joi.object({
   id:Joi.string().hex().length(24),
