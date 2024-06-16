@@ -9,7 +9,7 @@ import { CreateCategorySchema, DeleteCategorySchema, UpdateCategorySchema } from
 const router = Router()
 
 
-router.post('/',validation(CreateCategorySchema),fileUpload(fileType.image).single('image'),auth(permissions.create),asyncHandler(categoryController.Create) );
+router.post('/',fileUpload(fileType.image).single('image'),auth(permissions.create),validation(CreateCategorySchema),asyncHandler(categoryController.Create) );
 
 router.get('/',auth(permissions.getAll), asyncHandler(categoryController.getAll));
 router.get('/books/:id',validation(DeleteCategorySchema), asyncHandler(categoryController.getbooks) );
