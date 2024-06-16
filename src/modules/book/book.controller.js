@@ -197,8 +197,8 @@ export const addsubimage = async (req,res)=>{
         const updatedSubImages = [];
 
         for (const file of subImages) {
-            const subImageUpload = await cloudinary.uploader.upload(file.path, { folder: `${process.env.AppName}/books/${book.title}/Sub` });
-            const subImage = { secure_url: subImageUpload.secure_url, public_id: subImageUpload.public_id };
+            const  = await cloudinary.uploader.upload(file.path, { folder: `${process.env.AppName}/books/${book.title}/Sub` });
+            const subImage = {secure_url, public_id };
             updatedSubImages.push(subImage);
         }
 
