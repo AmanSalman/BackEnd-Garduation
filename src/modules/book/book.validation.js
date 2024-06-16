@@ -49,7 +49,7 @@ export const UpdateBookSchema = Joi.object({
   Discount:Joi.number().min(0).default(0),
   publishingHouse:Joi.string(),
   status:Joi.string().valid('Active', 'Disabled'),
-  categoryId:Joi.string().hex().length(24),
+  categoryId:Joi.string().hex().length(24).optional(),
   mainImage:Joi.array().items({
     fieldname:Joi.string().required(),
     originalname: Joi.string().required(),
