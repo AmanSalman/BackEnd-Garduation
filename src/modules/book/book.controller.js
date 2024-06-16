@@ -187,12 +187,6 @@ export const Update = async (req,res,next)=>{
     return res.status(200).json({message:'success',book});
 }
 
-
-// update sub image
-
-import cloudinary from 'cloudinary';
-import { BookModel } from './models'; // Adjust as per your actual model import
-
 export const addsubimage = async (req, res) => {
   const { id } = req.params;
   const { subImages } = req.files;
