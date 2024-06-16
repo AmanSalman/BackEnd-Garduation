@@ -13,6 +13,7 @@ router.patch('/', auth(permissions.update), asyncHandler(orderController.updateA
 router.patch('/:id', auth(permissions.update), asyncHandler(orderController.updateOrderStatus) )
 router.get('/count', auth(permissions.getOrdersCounts), asyncHandler(orderController.getOrdersCounts) )
 router.get('/orders', auth(permissions.getAll), asyncHandler(orderController.orders) )
+router.get('/sales-data', asyncHandler(orderController.sales))
 router.get('/userOrders', auth(permissions.create), asyncHandler(orderController.userOrders) )
 router.get('/getdetails/:id', auth(permissions.getDetails), asyncHandler(orderController.orderdetails))
 router.get('/admin/userorders/:id', auth(permissions.getuserorders), asyncHandler(orderController.userOrdersAdmin))

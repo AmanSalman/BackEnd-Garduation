@@ -319,3 +319,50 @@ export const userOrdersAdmin = async (req,res)=>{
   const orders = await orderModel.find({userId:id});
   return res.json({message:'success', orders})
 }
+
+
+export const sales = async (req, res) => {
+  try {
+    const salesData = await orderModel.aggregate([
+      { $unwind: { path: '$books', preserveNullAndEmptyArrays: true } }, // Unwind the books array and preserve empty arrays
+      {
+        $group: {
+          _id: { $month: { date: '$createdAt', timezone: 'UTC' } }, // Group by the month of order creation with UTC timezone
+          totalSales: { $sum: '$books.quantity' }, // Sum the quantities
+          totalRevenue: { $sum: { $multiply: ['$books.quantity', '$books.finalPrice'] } } // Sum the revenues
+        }
+      },
+      { $sort: { '_id': 1 } } // Sort by month in ascending order
+    ]);
+
+    // Calculate total sales for the year
+    const totalSalesYear = salesData.reduce((acc, month) => acc + (month.totalSales || 0), 0);
+
+    // Initialize sales data for all months with zero sales
+    const monthsData = Array.from({ length: 12 }, (_, index) => ({
+      _id: index + 1,
+      totalSales: 0,
+      totalRevenue: 0,
+    }));
+
+    // Update actual sales data for existing months
+    salesData.forEach(month => {
+      monthsData[month._id - 1] = {
+        _id: month._id,
+        totalSales: month.totalSales || 0,
+        totalRevenue: month.totalRevenue || 0,
+      };
+    });
+
+    // Calculate percentage of total sales for each month
+    const salesDataWithPercentages = monthsData.map(month => ({
+      ...month,
+      percentage: ((month.totalSales / totalSalesYear) * 100 || 0).toFixed(2)
+    }));
+
+    res.json(salesDataWithPercentages); // Return the aggregated data as JSON
+  } catch (error) {
+    console.error('Error fetching sales data:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
