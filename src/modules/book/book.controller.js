@@ -190,25 +190,41 @@ export const Update = async (req,res,next)=>{
 
 // update sub image
 
-export const addsubimage = async (req,res)=>{
-    const { id } = req.params;
-    const { subImages } = req.files;
-        const book = await BookModel.findById(id); 
-        const updatedSubImages = [];
+import cloudinary from 'cloudinary';
+import { BookModel } from './models'; // Adjust as per your actual model import
 
-        for (const file of subImages) {
-            const {secure_url, public_id } = await cloudinary.uploader.upload(file.path, { folder: `${process.env.AppName}/books/${book.title}/Sub` });
-            const subImage = {secure_url, public_id };
-            updatedSubImages.push(subImage);
-        }
+export const addsubimage = async (req, res) => {
+  const { id } = req.params;
+  const { subImages } = req.files;
 
-        book.subImages = [...book.subImages, ...updatedSubImages];
+  try {
+    // Find the book by id
+    const book = await BookModel.findById(id); 
 
-        // Save the updated book with new subimages
-        await book.save();
+    if (!book) {
+      return res.status(404).json({ error: 'Book not found' });
+    }
 
-        res.json({ message: 'success', updatedSubImages });
-}
+    // Upload each sub-image to Cloudinary and collect secure_url and public_id
+    const updatedSubImages = [];
+    for (const file of subImages) {
+      const { secure_url, public_id } = await cloudinary.uploader.upload(file.path, { folder: `${process.env.AppName}/books/${book.title}/Sub` });
+      updatedSubImages.push({ secure_url, public_id });
+    }
+
+    // Update book's subImages array with new sub-images
+    book.subImages = [...book.subImages, ...updatedSubImages];
+
+    // Save the updated book with new sub-images
+    await book.save();
+
+    // Respond with success message and updated sub-images
+    res.status(200).json({ message: 'Successfully added sub-images', updatedSubImages });
+  } catch (error) {
+    console.error('Error adding sub-images:', error);
+    res.status(500).json({ error: 'Failed to add sub-images' });
+  }
+};
 
 export const deleteSubImage = async (req, res,next) => {
     const { id } = req.params;
