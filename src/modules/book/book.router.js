@@ -23,7 +23,7 @@ router.get('/:id',validation(IdValidationSchema), asyncHandler (bookController.g
 
 // router.patch('/:id', auth(),fileUpload(fileType.image).single('image'), bookController.update);
 router.delete('/:id', validation(IdValidationSchema),  auth(permissions.delete) , asyncHandler (bookController.Delete));
-router.delete('/deleteSubimage/:id', validation(IdValidationSchema), auth(permissions.delete), asyncHandler (bookController.deleteSubImage));
+router.delete('/deleteSubimage/:id', validation(deleteValidationSchema), auth(permissions.delete), asyncHandler (bookController.deleteSubImage));
 router.patch('/:id', auth(permissions.update), fileUpload(fileType.image).single('mainImage'), validation(UpdateBookSchema), asyncHandler( bookController.Update))
 
 router.patch ('/:id/subimage',fileUpload(fileType.image).fields([
