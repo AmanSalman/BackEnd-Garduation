@@ -6,7 +6,7 @@ import { permissions } from "./book.role.js";
 import ReviewRouter from '../review/review.router.js'
 import { asyncHandler } from "../../utls/catchError.js";
 import { validation } from "../../middleware/validation.js";
-import { CreateBookSchema, IdValidationSchema, UpdateBookSchema, UpdateSubImagesSchema } from "./book.validation.js";
+import { CreateBookSchema, IdValidationSchema,deleteValidationSchema, UpdateBookSchema, UpdateSubImagesSchema } from "./book.validation.js";
 const router = Router()
 
 router.use('/:bookId/review', ReviewRouter )
