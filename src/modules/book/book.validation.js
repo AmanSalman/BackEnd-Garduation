@@ -49,7 +49,7 @@ export const UpdateBookSchema = Joi.object({
   Discount:Joi.number().min(0).default(0),
   publishingHouse:Joi.string(),
   status:Joi.string().valid('Active', 'Disabled'),
-  categoryName:Joi.string(),
+  categoryId:Joi.string().hex().length(24),
   mainImage:Joi.array().items({
     fieldname:Joi.string().required(),
     originalname: Joi.string().required(),
@@ -60,18 +60,6 @@ export const UpdateBookSchema = Joi.object({
     path: Joi.string().required(),
     size: Joi.number().max(5000000).required(),
   }),
-  subImages:Joi.array().items(
-    Joi.object({
-      fieldname:Joi.string().required(),
-      originalname: Joi.string().required(),
-      encoding: Joi.string().required(),
-      mimetype: Joi.string().valid('image/png', 'image/jpeg', 'image/webp').required(),
-      destination: Joi.string().required(),
-      filename: Joi.string().required(),
-      path: Joi.string().required(),
-      size: Joi.number().max(5000000).required(),
-    })
-  ).max(10).optional()
 });
 
 
