@@ -86,7 +86,4 @@ BookSChema.virtual ('reviews', {
     foreignField: 'bookId',
 })
 
-
-
-
 export const BookModel = model('Book', BookSChema);
