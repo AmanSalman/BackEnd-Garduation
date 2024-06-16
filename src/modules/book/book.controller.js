@@ -105,18 +105,33 @@ export const getActive = async (req,res,next) =>{
 }
 
 
-export const Delete = async (req,res,next)=>{
-    const {id} = req.params;
-    const book = await BookModel.findById(id);
-    if(!book){
-        return next(new AppError(`book not found`, 404))
-    }
-    if(book.mainImage){
-        await cloudinary.uploader.destroy(book.mainImage.public_id);
-    }
-    await BookModel.findByIdAndDelete(id);
-    return res.status(200).json({message:'success'});
-}
+// export const Delete = async (req,res,next)=>{
+//     const {id} = req.params;
+//     const book = await BookModel.findById(id);
+//     if(!book){
+//         return next(new AppError(`book not found`, 404))
+//     }
+//     if(book.mainImage){
+//         await cloudinary.uploader.destroy(book.mainImage.public_id);
+//     }
+//     await BookModel.findByIdAndDelete(id);
+//     return res.status(200).json({message:'success'});
+// }
+
+
+export const Delete = async (req, res, next) => {
+    const { id } = req.params;
+      const book = await BookModel.findById(id);
+      if (!book) {
+        return next(new AppError(`Book not found`, 404));
+      }
+  
+      book.deleted = true;
+      await book.save();
+  
+      return res.status(200).json({ message: 'Book soft deleted successfully' });
+  
+  };
 
 
 export const Update = async (req,res,next)=>{

@@ -68,8 +68,11 @@ const BookSChema = new Schema({
         type:String,
         required:true,
         ref:'Category'
-    }
-    
+    },
+    deleted: {
+        type: Boolean,
+        default: false
+      }
 },{
     timestamps: true,
     toJSON: { virtuals: true },
