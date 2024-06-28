@@ -26,7 +26,7 @@ const BookSChema = new Schema({
     },
     publishingHouse:{
         type:String,
-        required:true,
+        required:false,
     },
     categoryId:{
         type:String,
@@ -41,16 +41,6 @@ const BookSChema = new Schema({
         type:Object,
         required:false
     }],
-    createdBY:{ 
-        type:Types.ObjectId,
-        ref:'User',
-        // required:true
-    },
-    updatedBY:{
-        type:Types.ObjectId,
-        ref:'User',
-        // required:true
-    },
     Discount:{
         type:Number,
         default:0
