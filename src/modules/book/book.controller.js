@@ -72,7 +72,7 @@ export const getDetails = async (req,res)=>{
 
 
 export const getAll = async (req,res)=>{
-    const Books = await BookModel.find({}).populate({
+    const Books = await BookModel.find({deleted: false}).populate({
         path:'reviews',
         populate:{
             path:'userId',
