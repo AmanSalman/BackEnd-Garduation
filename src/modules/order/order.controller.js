@@ -249,7 +249,10 @@ export const create = async (req,res,next)=>{
 } 
 
 export const orders = async (req, res) => {
-  const orders = await orderModel.find()
+  const orders = await orderModel.find({}).populate({
+    path: 'userId',
+    select: 'username-_id' 
+});
   return res.json({message:'success', orders})
 }
 

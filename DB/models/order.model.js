@@ -64,6 +64,17 @@ const OrderSchema = new Schema({
   }
 },{
   timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+})
+
+OrderSchema.virtual ('user', {
+  ref: 'User',
+  localField: '_id',
+  foreignField: 'userId',
 })
 
 export const orderModel = model('Order',OrderSchema)
+
+
+

@@ -22,9 +22,8 @@ export const Appinit = ( app,express )=>{
       },
       methods: 'GET,POST,PUT,DELETE,HEAD,PATCH',
       allowedHeaders: 'Content-Type, Authorization',
-      credentials: true, // Set to true if you're passing cookies or authorization headers
+      credentials: true, 
       preflightContinue: false
-      
     }));
     app.get('/', (req,res)=>{
         return res.status(200).json({message:"Welcome"})
