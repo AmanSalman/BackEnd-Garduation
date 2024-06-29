@@ -28,9 +28,8 @@ export const forgetPasswordSchema = Joi.object({
 
 
 export const updateProfileSchema = Joi.object({
-  username: Joi.string().min(3).max(20),
-  email: Joi.string().email(),
-  phone: Joi.string().pattern(/^(?:\+972|0)?[5-9]\d{8}$|^(?:\+970|0)?[5-9]\d{8}$/)
+  username: Joi.string().min(3).max(20).optional(),
+  phone: Joi.string().pattern(/^(?:\+972|0)?[5-9]\d{8}$|^(?:\+970|0)?[5-9]\d{8}$/).optional()
 });
 
 
