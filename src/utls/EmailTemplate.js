@@ -54,7 +54,7 @@ export const emailTemplate =(userName,token)=>{
                 <h1>Hello! ${userName}</h1>
                 <p>We are excited to have you on board. Thank you for registering with us.</p>
                 <p>If you have any questions, feel free to reach out to our support team.</p>
-                <a href="http://localhost:3000/auth/confirmEmail/${token}">Confirm your Email</a>
+                <a href="${process.env.BACKEND_URL}/auth/confirmEmail/${token}">Confirm your Email</a>
             </div>
             <div class="footer">
                 &copy; ${new Date().getFullYear()} Aman. All rights reserved.
