@@ -3,7 +3,7 @@ import { AppError } from "../../utls/AppError.js";
 
 
 export const getAll = async (req,res)=> {
-    const users = await UserModel.find().select('username email phone status role');
+    const users = await UserModel.find()
     return res.status(200).json({message:"success",users});
 }
 

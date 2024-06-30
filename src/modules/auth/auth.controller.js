@@ -88,7 +88,7 @@ export const sendCode = async (req, res, next) => {
 export const confirmEmail = async (req,res)=>{
 	const token = req.params.token
 	const decoded = jwt.verify(token, process.env.SIGNConfirm)
-	await UserModel.findOneAndUpdate({email:decoded.email}, {confirmEmail:true})
+	await UserModel.findOneAndUpdate({email:decoded.email}, {confirmEmail:false})
 	return res.status(200).json({message: "success"})
 }
 
