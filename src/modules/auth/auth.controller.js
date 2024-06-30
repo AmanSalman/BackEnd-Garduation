@@ -153,3 +153,5 @@ export const updatePassword = async(req, res, next)=>{
     await UserModel.findByIdAndUpdate(req.user._id,{password:hashPassword});
     return res.json({message:"success"})
 } 
+
+
