@@ -43,4 +43,7 @@ Backend service for an e-commerce platform, showcasing skills in user authentica
    
 
 
-POSTMAN Documentation : https://documenter.getpostman.com/view/30950345/2sA3Bt1Ugg
+## POSTMAN Documentation
+   ```bash
+https://documenter.getpostman.com/view/30950345/2sA3Bt1Ugg
+```
